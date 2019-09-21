@@ -1,0 +1,11 @@
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\bin\Debug\netcoreapp2.1\CommonLayer.deps.json
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\bin\Debug\netcoreapp2.1\CommonLayer.runtimeconfig.json
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\bin\Debug\netcoreapp2.1\CommonLayer.runtimeconfig.dev.json
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\bin\Debug\netcoreapp2.1\CommonLayer.dll
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\bin\Debug\netcoreapp2.1\CommonLayer.pdb
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\obj\Debug\netcoreapp2.1\CommonLayer.csprojAssemblyReference.cache
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\obj\Debug\netcoreapp2.1\CommonLayer.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\obj\Debug\netcoreapp2.1\CommonLayer.AssemblyInfoInputs.cache
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\obj\Debug\netcoreapp2.1\CommonLayer.AssemblyInfo.cs
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\obj\Debug\netcoreapp2.1\CommonLayer.dll
+C:\Users\Admin\source\repos\FundooNoteApi\CommonLayer\obj\Debug\netcoreapp2.1\CommonLayer.pdb
