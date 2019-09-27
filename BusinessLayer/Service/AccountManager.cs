@@ -77,33 +77,34 @@ namespace BusinessLayer.Service
                     {
                         var lastLogin1 = DateTime.Now.ToString();
                         
-                        using(var redis = new RedisClient())
+                        using (var redis = new RedisClient())
                         {
-                            if (redis.Get("lastLoginTime") == null)
+                            if (redis.Get("lastLoginTime" + loginModel.UserName) == null)
                             {
-                                redis.Set("lastLoginTime", lastLogin1);
+                                redis.Set("lastLoginTime" + loginModel.UserName, lastLogin1);
                             }
                             else
                             {
                                 //lastLogin =  redis.Get("lastLoginTime");
                                 string utfString =  System.Text.Encoding.UTF8.GetString(redis.Get("lastLoginTime"));
-                                redis.Set("lastLoginTime", lastLogin1);
-                                return utfString;
+                                redis.Set("lastLoginTime" + loginModel.UserName, lastLogin1);
+                               // return utfString;
                             }
                             string utfString1 = System.Text.Encoding.UTF8.GetString(redis.Get("lastLoginTime"));
                             redis.Set("lastLoginTime", lastLogin1);
-                            return utfString1;
+                           // return utfString1;
                         }
                     }
-                    
-                    return result + lastLogin;
+
+                    return result;
                 }
                 else
                 {
                     throw new Exception("login model is null");
                 }
             }
-            catch(Exception ex)
+
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

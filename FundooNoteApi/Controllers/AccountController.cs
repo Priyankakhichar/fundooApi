@@ -47,8 +47,8 @@ namespace FundooNoteApi.Controllers
             if(result!= null)
             {
               
-                var lastlogin = result.Substring(result.LastIndexOf('+') + 1);
-                return this.Ok(new { result, lastlogin });
+                //var lastlogin = result.Substring(result.LastIndexOf('+') + 1);
+                return this.Ok(new { result });
             }
             else
             {

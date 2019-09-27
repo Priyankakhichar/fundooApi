@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "1a5e57747d6cde8d67369739f65a05fd9983aef1"
+    "signature": "978499f8952b9b1f2ffaa5757b5c79e3ce24d9a7"
   },
   "compilationOptions": {},
   "targets": {
@@ -9,10 +9,22 @@
       "CommonLayer/1.0.0": {
         "dependencies": {
           "Experimental.System.Messaging": "1.0.0",
-          "Microsoft.NETCore.App": "2.1.0"
+          "Microsoft.NETCore.App": "2.1.0",
+          "NEST": "7.3.0"
         },
         "runtime": {
           "CommonLayer.dll": {}
+        }
+      },
+      "Elasticsearch.Net/7.3.0": {
+        "dependencies": {
+          "System.Diagnostics.DiagnosticSource": "4.5.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Elasticsearch.Net.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.3.0.0"
+          }
         }
       },
       "Experimental.System.Messaging/1.0.0": {
@@ -44,9 +56,28 @@
       },
       "Microsoft.NETCore.Platforms/2.1.0": {},
       "Microsoft.NETCore.Targets/2.1.0": {},
+      "NEST/7.3.0": {
+        "dependencies": {
+          "Elasticsearch.Net": "7.3.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Nest.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.3.0.0"
+          }
+        }
+      },
       "NETStandard.Library/2.0.3": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "2.1.0"
+        }
+      },
+      "System.Diagnostics.DiagnosticSource/4.5.1": {
+        "runtime": {
+          "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.dll": {
+            "assemblyVersion": "4.0.3.1",
+            "fileVersion": "4.6.26919.2"
+          }
         }
       }
     }
@@ -56,6 +87,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Elasticsearch.Net/7.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-k+bNhjqYrexiwJsZjGaooft5FtIW9KmUQWn5AGsdbnXVfiuEQ5vQ+9TdRObyNiGTY0WW7a0zNpDjqnvC1E45og==",
+      "path": "elasticsearch.net/7.3.0",
+      "hashPath": "elasticsearch.net.7.3.0.nupkg.sha512"
     },
     "Experimental.System.Messaging/1.0.0": {
       "type": "package",
@@ -106,12 +144,26 @@
       "path": "microsoft.netcore.targets/2.1.0",
       "hashPath": "microsoft.netcore.targets.2.1.0.nupkg.sha512"
     },
+    "NEST/7.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RabHLCzGpYiYD2TGM1ihtb8gVqIVjUAQmHeTGAo6u1rJQNfukV0LFpKIcINbIahsGqqCW3pGG/NmfAXW4oKycA==",
+      "path": "nest/7.3.0",
+      "hashPath": "nest.7.3.0.nupkg.sha512"
+    },
     "NETStandard.Library/2.0.3": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
+    },
+    "System.Diagnostics.DiagnosticSource/4.5.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zCno/m44ymWhgLFh7tELDG9587q0l/EynPM0m4KgLaWQbz/TEKvNRX2YT5ip2qXW/uayifQ2ZqbnErsKJ4lYrQ==",
+      "path": "system.diagnostics.diagnosticsource/4.5.1",
+      "hashPath": "system.diagnostics.diagnosticsource.4.5.1.nupkg.sha512"
     }
   }
 }

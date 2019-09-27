@@ -45,6 +45,10 @@ namespace FundooNoteApi
            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
             services.AddTransient<IAccountManagerRepository, AccountManagerRepository>();
             services.AddTransient<IAccountManager, AccountManager>();
+            services.AddTransient<INoteBusinessManager, AccountManagerService>();
+            services.AddTransient<INotesAccountManagerRepository, NotesAccountManagerRepository>();
+            services.AddTransient<ILabelBusinessManager, LabelAccountManagerService>();
+            services.AddTransient<ILabelAccountManager, LabelAccountManagerRepository>();
 
 
             //// database connection
@@ -90,7 +94,7 @@ namespace FundooNoteApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyFandooApp", Version = "v1", Description = "Fandoo App" });
-               // c.OperationFilter<FileUploadedOperation>();
+                c.OperationFilter<FileUploadedOperation>();
             });
 
           

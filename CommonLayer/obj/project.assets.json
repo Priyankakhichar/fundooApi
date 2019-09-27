@@ -2,6 +2,21 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.1": {
+      "Elasticsearch.Net/7.3.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Buffers": "4.5.0",
+          "System.Diagnostics.DiagnosticSource": "4.5.1",
+          "System.Reflection.Emit": "4.3.0",
+          "System.Reflection.Emit.Lightweight": "4.3.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Elasticsearch.Net.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Elasticsearch.Net.dll": {}
+        }
+      },
       "Experimental.System.Messaging/1.0.0": {
         "type": "package",
         "compile": {
@@ -2610,6 +2625,18 @@
           }
         }
       },
+      "NEST/7.3.0": {
+        "type": "package",
+        "dependencies": {
+          "Elasticsearch.Net": "[7.3.0, 8.0.0)"
+        },
+        "compile": {
+          "lib/netstandard2.0/Nest.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Nest.dll": {}
+        }
+      },
       "NETStandard.Library/2.0.3": {
         "type": "package",
         "dependencies": {
@@ -3042,7 +3069,7 @@
           "ref/netstandard1.3/System.Diagnostics.Debug.dll": {}
         }
       },
-      "System.Diagnostics.DiagnosticSource/4.5.0": {
+      "System.Diagnostics.DiagnosticSource/4.5.1": {
         "type": "package",
         "compile": {
           "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.dll": {}
@@ -3546,7 +3573,7 @@
           "System.Runtime": "4.3.0"
         },
         "compile": {
-          "ref/netstandard1.0/_._": {}
+          "ref/netstandard1.0/System.Reflection.Emit.Lightweight.dll": {}
         },
         "runtime": {
           "lib/netstandard1.3/System.Reflection.Emit.Lightweight.dll": {}
@@ -4346,6 +4373,22 @@
     }
   },
   "libraries": {
+    "Elasticsearch.Net/7.3.0": {
+      "sha512": "k+bNhjqYrexiwJsZjGaooft5FtIW9KmUQWn5AGsdbnXVfiuEQ5vQ+9TdRObyNiGTY0WW7a0zNpDjqnvC1E45og==",
+      "type": "package",
+      "path": "elasticsearch.net/7.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "elasticsearch.net.7.3.0.nupkg.sha512",
+        "elasticsearch.net.nuspec",
+        "lib/net461/Elasticsearch.Net.dll",
+        "lib/net461/Elasticsearch.Net.xml",
+        "lib/netstandard2.0/Elasticsearch.Net.dll",
+        "lib/netstandard2.0/Elasticsearch.Net.xml",
+        "license.txt"
+      ]
+    },
     "Experimental.System.Messaging/1.0.0": {
       "sha512": "3iV3yEL3cq5UL0onKmdyF8Z180uRF4bQzOcKwS798Tx8L792aNXTLWiYuViKOT2J6tNqVpJh9agfPa2GnIWNsQ==",
       "type": "package",
@@ -6964,6 +7007,22 @@
         "version.txt"
       ]
     },
+    "NEST/7.3.0": {
+      "sha512": "RabHLCzGpYiYD2TGM1ihtb8gVqIVjUAQmHeTGAo6u1rJQNfukV0LFpKIcINbIahsGqqCW3pGG/NmfAXW4oKycA==",
+      "type": "package",
+      "path": "nest/7.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Nest.dll",
+        "lib/net461/Nest.xml",
+        "lib/netstandard2.0/Nest.dll",
+        "lib/netstandard2.0/Nest.xml",
+        "license.txt",
+        "nest.7.3.0.nupkg.sha512",
+        "nest.nuspec"
+      ]
+    },
     "NETStandard.Library/2.0.3": {
       "sha512": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
       "type": "package",
@@ -8069,10 +8128,10 @@
         "system.diagnostics.debug.nuspec"
       ]
     },
-    "System.Diagnostics.DiagnosticSource/4.5.0": {
-      "sha512": "eIHRELiYDQvsMToML81QFkXEEYXUSUT2F28t1SGrevWqP+epFdw80SyAXIKTXOHrIEXReFOEnEr7XlGiC2GgOg==",
+    "System.Diagnostics.DiagnosticSource/4.5.1": {
+      "sha512": "zCno/m44ymWhgLFh7tELDG9587q0l/EynPM0m4KgLaWQbz/TEKvNRX2YT5ip2qXW/uayifQ2ZqbnErsKJ4lYrQ==",
       "type": "package",
-      "path": "system.diagnostics.diagnosticsource/4.5.0",
+      "path": "system.diagnostics.diagnosticsource/4.5.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -8088,7 +8147,7 @@
         "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.xml",
         "lib/portable-net45+win8+wpa81/System.Diagnostics.DiagnosticSource.dll",
         "lib/portable-net45+win8+wpa81/System.Diagnostics.DiagnosticSource.xml",
-        "system.diagnostics.diagnosticsource.4.5.0.nupkg.sha512",
+        "system.diagnostics.diagnosticsource.4.5.1.nupkg.sha512",
         "system.diagnostics.diagnosticsource.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
@@ -11818,7 +11877,8 @@
       "Experimental.System.Messaging >= 1.0.0",
       "Microsoft.AspNetCore.App >= 2.1.1",
       "Microsoft.Extensions.Identity.Stores >= 2.1.1",
-      "Microsoft.NETCore.App >= 2.1.0"
+      "Microsoft.NETCore.App >= 2.1.0",
+      "NEST >= 7.3.0"
     ]
   },
   "packageFolders": {
@@ -11879,6 +11939,10 @@
             "target": "Package",
             "version": "[2.1.0, )",
             "autoReferenced": true
+          },
+          "NEST": {
+            "target": "Package",
+            "version": "[7.3.0, )"
           }
         },
         "imports": [
