@@ -1,4 +1,10 @@
-﻿
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "Admin.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace XUnitTestCases.adminTestCases
 {
     using BusinessLayer.Service;

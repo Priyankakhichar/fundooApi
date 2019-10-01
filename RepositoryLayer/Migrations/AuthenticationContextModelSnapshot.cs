@@ -50,9 +50,15 @@ namespace RepositoryLayer.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("Image");
+
+                    b.Property<bool>("IsPin");
+
                     b.Property<DateTime>("ModifiedDate");
 
                     b.Property<int>("NoteType");
+
+                    b.Property<DateTime>("Reminder");
 
                     b.Property<string>("Title");
 

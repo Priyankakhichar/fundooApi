@@ -9,8 +9,15 @@
 namespace CommonLayer.Models
 {
     using System.ComponentModel.DataAnnotations.Schema;
+
+   /// <summary>
+   /// forget password model class
+   /// </summary>
     public class ForgetPasswordModel
     {
+        /// <summary>
+        /// foregin key email id from user registration
+        /// </summary>
         [ForeignKey("UserRegistration")]
         public string EmailId
         {

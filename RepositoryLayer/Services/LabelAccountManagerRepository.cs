@@ -1,22 +1,43 @@
-﻿using CommonLayer.Models;
-using RepositoryLayer.Context;
-using RepositoryLayer.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "LabelAccountManagerRepository.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace RepositoryLayer.Services
 {
-   public class LabelAccountManagerRepository : ILabelAccountManager
+    using CommonLayer.Models;
+    using RepositoryLayer.Context;
+    using RepositoryLayer.Interface;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// label repository class
+    /// </summary>
+    public class LabelAccountManagerRepository : ILabelAccountManager
     {
+        /// <summary>
+        /// Authentication context variable
+        /// </summary>
         private AuthenticationContext context;
+
+        /// <summary>
+        /// constructor to initilize the authentication context
+        /// </summary>
+        /// <param name="context"></param>
         public LabelAccountManagerRepository(AuthenticationContext context)
         {
             this.context = context;
         }
 
+        /// <summary>
+        /// add label method 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>returns true if label successfully added to the database</returns>
         public async Task<bool> AddLabel(LabelModel model)
         {
             var labelModel = new LabelModel()
@@ -28,6 +49,8 @@ namespace RepositoryLayer.Services
             };
 
             this.context.Add(labelModel);
+
+            ////save chnages method to save the data to the database
             var result = await this.context.SaveChangesAsync();
             if(result > 0)
             {
@@ -39,9 +62,17 @@ namespace RepositoryLayer.Services
             }
         }
 
+        /// <summary>
+        /// delete label method to delete label from databse according to the label id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<string> DeleteLabel(int id)
         {
+            ////linq query
             var delete = this.context.LabelModels.Where (d => d.Id == id).FirstOrDefault();
+
+            ////removing row from database
             this.context.Remove(delete);
             var result = await this.context.SaveChangesAsync();
             if(result != 0)
@@ -54,7 +85,12 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public List<LabelModel> GetLabel(string userId)
+        /// <summary>
+        /// get label method to get label from data base accrding to the user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>returns the list of labels</returns>
+        public IList<LabelModel> GetLabel(string userId)
         {
             List<LabelModel> list = new List<LabelModel>();
             var result = from label in context.LabelModels.Where(s => s.UserId == userId) select label;
@@ -67,17 +103,23 @@ namespace RepositoryLayer.Services
                     CreatedDate = label.CreatedDate,
                     ModifiedDate = label.ModifiedDate
                 };
-
+                ////adding the labels to the list
                 list.Add(labelModel);
             }
 
             return list;
         }
 
+        /// <summary>
+        /// update label method to update the details of a label
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="id"></param>
+        /// <returns>returns the success message if update is successfully executed</returns>
         public async Task<string> UpdateLabel(LabelModel model ,int id)
         {
             var result = from label in context.LabelModels.Where(u => u.Id == id) select label;
-            foreach(var label in result)
+            foreach (var label in result)
             {
                 label.UserId = model.UserId;
                 label.LableName = model.LableName;
@@ -86,7 +128,7 @@ namespace RepositoryLayer.Services
             }
 
             var labelResult = await context.SaveChangesAsync();
-            if(labelResult != 0)
+            if (labelResult != 0)
             {
                 return "updated successfully";
             }

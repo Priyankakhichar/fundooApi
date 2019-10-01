@@ -1,5 +1,10 @@
-﻿
-
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "LableTest.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace XUnitTestCases.LabelTestCases
 {
     using BusinessLayer.Service;

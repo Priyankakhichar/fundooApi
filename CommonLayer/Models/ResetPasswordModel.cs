@@ -7,12 +7,21 @@
 ////-------------------------------------------------------------------------------------------------------------------------------
 namespace CommonLayer.Models
 {
+    /// <summary>
+    /// reset password model
+    /// </summary>
     public class ResetPasswordModel
     {
+        /// <summary>
+        /// email id 
+        /// </summary>
         public string EmailId
         {
             get; set;
         }
+        /// <summary>
+        /// password
+        /// </summary>
         public string Password
         {
             get; set;

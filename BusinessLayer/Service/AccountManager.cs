@@ -69,34 +69,36 @@ namespace BusinessLayer.Service
         {
             try
             {
+                var lastLoginTime = "";
                 ////if loginModel is not null it will return result else throw the exception 
                 if (!loginModel.Equals(null))
                 {
                     var result = await this.accountManagerRepository.Login(loginModel);
                     if(result != null)
                     {
-                        var lastLogin1 = DateTime.Now.ToString();
+                        var newLoginTime = DateTime.Now.ToString();
                         
                         using (var redis = new RedisClient())
                         {
-                            if (redis.Get("lastLoginTime" + loginModel.UserName) == null)
+                            if (redis.Get("lastLogin" + loginModel.UserName) == null)
                             {
-                                redis.Set("lastLoginTime" + loginModel.UserName, lastLogin1);
+                                redis.Set("lastLogin" + loginModel.UserName, newLoginTime);
                             }
                             else
                             {
-                                //lastLogin =  redis.Get("lastLoginTime");
-                                string utfString =  System.Text.Encoding.UTF8.GetString(redis.Get("lastLoginTime"));
-                                redis.Set("lastLoginTime" + loginModel.UserName, lastLogin1);
-                               // return utfString;
+                               
+                                string utfString =  System.Text.Encoding.UTF8.GetString(redis.Get("lastLogin" + loginModel.UserName));
+                                redis.Set("lastLogin" + loginModel.UserName, newLoginTime);
+                                lastLoginTime = "+" + utfString;
+                           
                             }
-                            string utfString1 = System.Text.Encoding.UTF8.GetString(redis.Get("lastLoginTime"));
-                            redis.Set("lastLoginTime", lastLogin1);
-                           // return utfString1;
+                           // string utfString1 = System.Text.Encoding.UTF8.GetString(redis.Get("lastLogin" + loginModel.UserName));
+                           // redis.Set("lastLogin", newLoginTime);
+                           //// return utfString1;
                         }
                     }
 
-                    return result;
+                    return result + lastLoginTime;
                 }
                 else
                 {

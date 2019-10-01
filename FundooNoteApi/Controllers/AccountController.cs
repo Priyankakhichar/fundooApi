@@ -13,17 +13,32 @@ namespace FundooNoteApi.Controllers
     using CommonLayer.Models;
     using Microsoft.AspNetCore.Mvc;
 
+    /// <summary>
+    /// account controller
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
+        /// <summary>
+        /// service class reference variable
+        /// </summary>
         private IAccountManager _accountmanager;
 
+        /// <summary>
+        /// constructor to initialize the service instance variable
+        /// </summary>
+        /// <param name="accountmanager"></param>
         public AccountController(IAccountManager accountmanager)
         {
             this._accountmanager = accountmanager;
         }
 
+        /// <summary>
+        /// registering the user
+        /// </summary>
+        /// <param name="registration"></param>
+        /// <returns>returns result</returns>
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> PostApplicationUser(UserRegistration registration)
@@ -39,6 +54,11 @@ namespace FundooNoteApi.Controllers
             }
         }
 
+        /// <summary>
+        /// login method verifiying the details stored in database
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginModel login)
@@ -46,9 +66,12 @@ namespace FundooNoteApi.Controllers
             var result = await this._accountmanager.Login(login);
             if(result!= null)
             {
-              
-                //var lastlogin = result.Substring(result.LastIndexOf('+') + 1);
-                return this.Ok(new { result });
+                ////subsrtring method to separate the token and login time
+                var lastlogin = result.Substring(result.IndexOf('+') + 1);
+                result = result.Substring(0, result.IndexOf('+'));
+
+                ////returning the token and last login time
+                return this.Ok(new { result , lastlogin});
             }
             else
             {
@@ -56,6 +79,11 @@ namespace FundooNoteApi.Controllers
             }
         }
 
+        /// <summary>
+        /// forget password method
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("forgetPassword")]
         public async Task<IActionResult> ForgetPassword(ForgetPasswordModel model)
@@ -71,6 +99,11 @@ namespace FundooNoteApi.Controllers
             }
         }
 
+        /// <summary>
+        /// reset password method
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("resetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel model)

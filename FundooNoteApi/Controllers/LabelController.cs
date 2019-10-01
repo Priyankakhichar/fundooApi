@@ -1,24 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BusinessLayer.Interface;
-using CommonLayer.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "LabelController.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace FundooNoteApi.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using BusinessLayer.Interface;
+    using CommonLayer.Models;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
+    /// <summary>
+    /// label controller
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class LabelController : ControllerBase
     {
+        /// <summary>
+        /// variable of business interface
+        /// </summary>
         private ILabelBusinessManager labelBusinessManager;
+
+        /// <summary>
+        /// constructor to initialize the interface instance variable
+        /// </summary>
+        /// <param name="manager"></param>
         public LabelController(ILabelBusinessManager manager)
         {
             this.labelBusinessManager = manager;
         }
 
+        /// <summary>
+        /// add label method
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("addLabel")]
         public async Task<IActionResult> AddLabel(LabelModel model)
@@ -33,6 +56,12 @@ namespace FundooNoteApi.Controllers
                 return BadRequest();
             }
         }
+
+        /// <summary>
+        /// delete label method
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("delete/{id}")]
         public async Task<IActionResult> DeleteLabel(int id)
@@ -48,12 +77,18 @@ namespace FundooNoteApi.Controllers
             }
         }
 
+        /// <summary>
+        /// upadte label
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("update/{id}")]
         public async Task<IActionResult> UpdateLabel(LabelModel model, int id)
         {
             var result = await this.labelBusinessManager.UpdateLabel(model, id);
-            if(result != null)
+            if (result != null)
             {
                 return Ok(new { result });
             }
@@ -63,12 +98,17 @@ namespace FundooNoteApi.Controllers
             }
         }
 
+        /// <summary>
+        /// get label
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("getLabel{userId}")]
-       public List<LabelModel> GetLabel(string userId)
+       public IList<LabelModel> GetLabel(string userId)
         {
             var result = this.labelBusinessManager.GetLabel(userId);
-            if(result != null)
+            if (result != null)
             {
                 return result;
             }

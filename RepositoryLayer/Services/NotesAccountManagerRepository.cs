@@ -1,24 +1,40 @@
-﻿using CommonLayer.Models;
-using Microsoft.AspNetCore.Identity;
-using RepositoryLayer.Context;
-using RepositoryLayer.Interface;
-using ServiceStack.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "NotesAccountManagerRepository.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace RepositoryLayer.Services
 {
+    using CommonLayer.Models;
+    using RepositoryLayer.Context;
+    using RepositoryLayer.Interface;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     public class NotesAccountManagerRepository : INotesAccountManagerRepository
     {
+        /// <summary>
+        /// Authentication context instance variable
+        /// </summary>
         private AuthenticationContext context;
+
+        /// <summary>
+        /// constructor to initialize the context variable 
+        /// </summary>
+        /// <param name="context"></param>
         public NotesAccountManagerRepository(AuthenticationContext context)
         {
             this.context = context;
         }
 
+        /// <summary>
+        /// add notes method to add notes to the database
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<bool> AddNotes(NotesModel model)
         {
             try
@@ -56,6 +72,11 @@ namespace RepositoryLayer.Services
             }
         }
 
+        /// <summary>
+        /// delete notes accroding to the notes id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<int> DeleteNotes(int id)
         {
             ////linq for delete notes...it storing the information in delete variable for perticular id
@@ -69,10 +90,17 @@ namespace RepositoryLayer.Services
             return result;
         }
 
-        public List<NotesModel> GetNotes(string userId)
+        /// <summary>
+        /// get notes from the data base according to the data base
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public IList<NotesModel> GetNotes(string userId, EnumNoteType noteType)
         {
+            ///list of notes model type
             List<NotesModel> list = new List<NotesModel>();
-            var result = (from notes in context.NotesModels where notes.UserId == userId select notes);
+
+            var result = (from notes in context.NotesModels where notes.UserId == userId && notes.NoteType.Equals(noteType) select notes);
             ////iterating the loop till there are records
             foreach (var res in result)
             {
@@ -86,11 +114,20 @@ namespace RepositoryLayer.Services
                     CreateDate = res.CreateDate,
                     ModifiedDate = res.ModifiedDate
                 };
+
+                ////adding the records to the list
+                list.Add(notesModel);
             }
 
             return list;
         }
 
+        /// <summary>
+        /// update notes method to update notes
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> UpdatesNotes(NotesModel model, int id)
         {
             var notesData = (from notes in context.NotesModels
@@ -108,6 +145,7 @@ namespace RepositoryLayer.Services
                 notesModels.ModifiedDate = model.ModifiedDate;
             }
 
+            ////save changes to the database
             var result = await this.context.SaveChangesAsync();
             if(result > 0)
             {
@@ -117,6 +155,11 @@ namespace RepositoryLayer.Services
             {
                 return false;
             }
+        }
+       
+        public async Task<string> AddImage(string image)
+        {
+            var notesModel = new NotesModel()
         }
     }
 }

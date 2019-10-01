@@ -1,4 +1,10 @@
-﻿
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "NotesTest.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace XUnitTestCases.NotesTestCases
 {
     using BusinessLayer.Service;
@@ -16,7 +22,7 @@ namespace XUnitTestCases.NotesTestCases
         public void CreateNotesTest()
         {
             var notesdata = new Mock<INotesAccountManagerRepository>();
-            var notes = new AccountManagerService(notesdata.Object);
+            var notes = new NotesAccountManagerService(notesdata.Object);
             var notesModel = new NotesModel()
             {
                 Description = "Desciption",
@@ -38,13 +44,14 @@ namespace XUnitTestCases.NotesTestCases
         public void GetNotes()
         {
             var notesData = new Mock<INotesAccountManagerRepository>();
-            var notes = new AccountManagerService(notesData.Object);
+            var notes = new NotesAccountManagerService(notesData.Object);
             var notesModel = new NotesModel()
             {
-                UserId = "UserId"
+                UserId = "UserId",
+                NoteType = 0
             };
 
-            var result = notes.GetNotes(notesModel.UserId);
+            var result = notes.GetNotes(notesModel.UserId,notesModel.NoteType);
             Assert.NotNull(result);
         }
 
@@ -55,7 +62,7 @@ namespace XUnitTestCases.NotesTestCases
         public void DeleteNotes()
         {
             var notesData = new Mock<INotesAccountManagerRepository>();
-            var notes = new AccountManagerService(notesData.Object);
+            var notes = new NotesAccountManagerService(notesData.Object);
             var notesModel = new NotesModel()
             {
                 Id = 1
@@ -72,7 +79,7 @@ namespace XUnitTestCases.NotesTestCases
         public void UpdateNotes()
         {
             var notesData = new Mock<INotesAccountManagerRepository>();
-            var notes = new AccountManagerService(notesData.Object);
+            var notes = new NotesAccountManagerService(notesData.Object);
             var notesModel = new NotesModel()
             {
                 Id = 1,

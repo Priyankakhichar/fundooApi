@@ -42,16 +42,16 @@ namespace FundooNoteApi
         public void ConfigureServices(IServiceCollection services)
         {
             //Inject app settings
-           services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
             services.AddTransient<IAccountManagerRepository, AccountManagerRepository>();
             services.AddTransient<IAccountManager, AccountManager>();
-            services.AddTransient<INoteBusinessManager, AccountManagerService>();
+            services.AddTransient<INoteBusinessManager, NotesAccountManagerService>();
             services.AddTransient<INotesAccountManagerRepository, NotesAccountManagerRepository>();
             services.AddTransient<ILabelBusinessManager, LabelAccountManagerService>();
             services.AddTransient<ILabelAccountManager, LabelAccountManagerRepository>();
 
 
-            //// database connection
+            //// database connection service is registered with method extension
             services.AddDbContext<AuthenticationContext>(options =>
           options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
 

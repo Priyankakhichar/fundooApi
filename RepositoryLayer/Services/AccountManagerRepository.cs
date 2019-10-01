@@ -12,7 +12,6 @@ namespace RepositoryLayer.Services
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
     using RepositoryLayer.Interface;
-    using StackExchange.Redis;
     using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
@@ -100,7 +99,7 @@ namespace RepositoryLayer.Services
                         new Claim("userId", user.Id.ToString())
                     }),
                     ////DateTime.UtcNow sets the current system time. it allow user login for 30 minutes
-                    Expires = DateTime.UtcNow.AddMinutes(30),
+                    Expires = DateTime.UtcNow.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
                 };
 

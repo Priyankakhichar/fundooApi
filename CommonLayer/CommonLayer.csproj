@@ -11,4 +11,9 @@
     <PackageReference Include="NEST" Version="7.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MSMQ\" />
+    <Folder Include="Enum\" />
+  </ItemGroup>
+
 </Project>
