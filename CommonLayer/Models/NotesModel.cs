@@ -7,8 +7,8 @@
 ////-------------------------------------------------------------------------------------------------------------------------------
 namespace CommonLayer.Models
 {
+    using CommonLayer.Enum;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,6 +27,14 @@ namespace CommonLayer.Models
             set;
         }
 
+        /// <summary>
+        /// user id declared as foregin key
+        /// </summary>
+        [ForeignKey("UserRegistration")]
+        public string UserId
+        {
+            get; set;
+        }
         /// <summary>
         /// title
         /// </summary>
@@ -52,44 +60,22 @@ namespace CommonLayer.Models
             get; set;
         }
 
-        /// <summary>
-        /// user id declared as foregin key
-        /// </summary>
-        [ForeignKey("UserRegistration")]
-        public string UserId
-        {
-            get; set;
-        }
 
         /// <summary>
         /// enum type 
         /// </summary>
-        [RegularExpression(@"^[0-2]$")]
+        [Range(0, 2,
+         ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public EnumNoteType NoteType
         {
             get; set;
         }
-
-        /// <summary>
-        /// created date
-        /// </summary>
-        public DateTime CreateDate
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// modified date
-        /// </summary>
-        public DateTime ModifiedDate
-        {
-            get; set;
-        }
+  
         public bool IsPin
         {
             get; set;
         }
-        public DateTime Reminder
+        public DateTime? Reminder
         {
             get; set;
         }
@@ -97,6 +83,20 @@ namespace CommonLayer.Models
         {
             get; set;
         }
-      
+        /// <summary>
+        /// created date
+        /// </summary>
+        public DateTime? CreateDate
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// modified date
+        /// </summary>
+        public DateTime? ModifiedDate
+        {
+            get; set;
+        }
     }
 }

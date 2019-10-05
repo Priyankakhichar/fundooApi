@@ -8,6 +8,7 @@
 namespace RepositoryLayer.Interface
 {
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Http;
     using System.Threading.Tasks;
     public interface IAccountManagerRepository
     {
@@ -36,6 +37,14 @@ namespace RepositoryLayer.Interface
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<string> ResetPassword(ResetPasswordModel model);
+        Task<string> ResetPassword(ResetPasswordModel model, string token);
+
+        /// <summary>
+        /// uploading the image 
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        string UploadImage(IFormFile file, string userId);
     }
 }

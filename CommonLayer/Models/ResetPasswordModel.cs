@@ -15,7 +15,7 @@ namespace CommonLayer.Models
         /// <summary>
         /// email id 
         /// </summary>
-        public string EmailId
+        public string Email
         {
             get; set;
         }
@@ -26,5 +26,9 @@ namespace CommonLayer.Models
         {
             get; set;
         }
+        //public string Token
+        //{
+        //    get; set;
+        //}
     }
 }

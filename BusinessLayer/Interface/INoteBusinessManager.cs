@@ -7,7 +7,10 @@
 ////-------------------------------------------------------------------------------------------------------------------------------
 namespace BusinessLayer.Interface
 {
+    using CommonLayer.Enum;
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Http;
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -44,6 +47,36 @@ namespace BusinessLayer.Interface
         /// <param name="userId"></param>
         /// <returns></returns>
         IList<NotesModel> GetNotes(string userId, EnumNoteType noteType);
-        Task<string> AddImage(string image);
+
+        /// <summary>
+        /// upload image
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="noteId"></param>
+        /// <returns></returns>
+        string AddImage(IFormFile file, int noteId);
+
+        /// <summary>
+        /// is pin method to get list
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <param name="isPin"></param>
+        /// <returns></returns>
+       /// IEnumerable<NotesModel> IsPin(int noteId, bool isPin);
+
+        /// <summary>
+        /// add reminder method
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        string AddReminder(int noteId, DateTime time);
+
+        /// <summary>
+        /// remove reminder method
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <returns></returns>
+        string DeleteReminder(int noteId);
     }
 }

@@ -1,13 +1,14 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "0d96bc3239615302c83c683cd967d168be9697a8"
+    "signature": "e73be977457d3c079a6bfb30cba27729d4241983"
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v2.1": {
       "RepositoryLayer/1.0.0": {
         "dependencies": {
+          "CloudinaryDotNet": "1.8.0",
           "CommonLayer": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.1.1",
           "Microsoft.EntityFrameworkCore.Tools": "2.1.1",
@@ -16,6 +17,17 @@
         },
         "runtime": {
           "RepositoryLayer.dll": {}
+        }
+      },
+      "CloudinaryDotNet/1.8.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {
+            "assemblyVersion": "1.8.0.0",
+            "fileVersion": "1.8.0.0"
+          }
         }
       },
       "Elasticsearch.Net/7.3.0": {
@@ -3713,6 +3725,7 @@
       },
       "CommonLayer/1.0.0": {
         "dependencies": {
+          "CloudinaryDotNet": "1.8.0",
           "Experimental.System.Messaging": "1.0.0",
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.Extensions.Identity.Stores": "2.1.1",
@@ -3729,6 +3742,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "CloudinaryDotNet/1.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jrxUPvVmdGL+8wDGQn4rBrRh7jKPDTqUW1kBj+fwmGdiMW5aBArQ3P2ErnYA84AQgvJnb2JwP3WTlwD2Yc/kdA==",
+      "path": "cloudinarydotnet/1.8.0",
+      "hashPath": "cloudinarydotnet.1.8.0.nupkg.sha512"
     },
     "Elasticsearch.Net/7.3.0": {
       "type": "package",

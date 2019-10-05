@@ -15,10 +15,12 @@ namespace CommonLayer.Models
     public class UserRegistration
     {
         /// <summary>
-        /// first Name with annotations
+        /// first Name with annotations Allow up to 40 uppercase and lowercase 
+        /// characters. Use custom error.
         /// </summary>
         [Required]
-        [StringLength(50, MinimumLength = 4, ErrorMessage = "firstName should be at least 5 characters")]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$",ErrorMessage = "Characters are not allowed.")]
+        [StringLength(40, MinimumLength = 4, ErrorMessage = "firstName should be at least 5 characters")]
         public string FirstName
         {
             get; set;
@@ -27,6 +29,10 @@ namespace CommonLayer.Models
         /// <summary>
         /// last name
         /// </summary>
+        [Required]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$",
+         ErrorMessage = "Characters are not allowed.")]
+        [StringLength(40, MinimumLength = 4, ErrorMessage = "firstName should be at least 5 characters")]
         public string LastName
         {
             get; set;
@@ -37,6 +43,7 @@ namespace CommonLayer.Models
         /// </summary>
         [EmailAddress]
         [Required]
+        [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", ErrorMessage = "Email is not valid.")]
         public string EmailId
         {
             get; set;
@@ -58,9 +65,6 @@ namespace CommonLayer.Models
         [Required]
         [StringLength(15, MinimumLength = 3)]
         public string UserName { get; set; }
-        public string Image
-        {
-            get; set;
-        }
+       
     }
 }

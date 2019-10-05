@@ -32,5 +32,10 @@ namespace CommonLayer.Models
         {
             get; set;
         }
+       
+        public string Image
+        {
+            get; set;
+        }
     }
 }

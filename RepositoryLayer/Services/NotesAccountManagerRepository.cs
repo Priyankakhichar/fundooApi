@@ -7,7 +7,12 @@
 ////-------------------------------------------------------------------------------------------------------------------------------
 namespace RepositoryLayer.Services
 {
+    using CloudinaryDotNet;
+    using CloudinaryDotNet.Actions;
+    using CommonLayer;
+    using CommonLayer.Enum;
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Http;
     using RepositoryLayer.Context;
     using RepositoryLayer.Interface;
     using System;
@@ -132,18 +137,18 @@ namespace RepositoryLayer.Services
         {
             var notesData = (from notes in context.NotesModels
                           where notes.Id == id
-                          select notes);
-
-            foreach(var notesModels in notesData)
-            {
-                notesModels.Title = model.Title;
-                notesModels.Description = model.Description;
-                notesModels.UserId = model.UserId;
-                notesModels.Color = model.Color;
-                notesModels.NoteType = model.NoteType;
-                notesModels.CreateDate = model.CreateDate;
-                notesModels.ModifiedDate = model.ModifiedDate;
-            }
+                          select notes).FirstOrDefault();
+            
+                notesData.Title = model.Title;
+                notesData.Description = model.Description;
+                notesData.UserId = model.UserId;
+                notesData.Color = model.Color;
+                notesData.NoteType = model.NoteType;
+                notesData.IsPin = model.IsPin;
+                notesData.Image = model.Image;
+                notesData.CreateDate = model.CreateDate;
+                notesData.ModifiedDate = DateTime.Now;
+            
 
             ////save changes to the database
             var result = await this.context.SaveChangesAsync();
@@ -156,10 +161,106 @@ namespace RepositoryLayer.Services
                 return false;
             }
         }
-       
-        public async Task<string> AddImage(string image)
+
+        /// <summary>
+        /// uploading the image
+        /// </summary>
+        /// <param name="file">file</param>
+        /// <param name="noteId">noteId</param>
+        /// <returns></returns>
+       public string AddImage(IFormFile file, int noteId)
         {
-            var notesModel = new NotesModel()
+            ////object of custom class Image Cloudinary
+            ImageCloudinary cloudinary = new ImageCloudinary();
+
+            ////url from cloudinary
+            var url = cloudinary.UploadImageAtCloudinary(file);
+
+            ////getting the row according to the note id
+            var updatableRow = context.NotesModels.Where(u => u.Id == noteId).FirstOrDefault();
+
+            ////placing the url
+            updatableRow.Image = url;
+            var result = this.context.SaveChanges();
+            if(result != 0)
+            {
+                return "image successfully added";
+            }
+            else
+            {
+                return "image upload failed";
+            }
+        }
+
+        ///// <summary>
+        ///// Is pin method to returns list of pinned notes
+        ///// </summary>
+        ///// <param name="noteId"></param>
+        ///// <param name="isPin"></param>
+        ///// <returns>returns the list of notes which is pinned</returns>
+        //public IEnumerable<NotesModel> IsPin(int noteId, bool isPin)
+        //{
+        //    ////getting the rows according to the note id
+        //    var updatableRow = this.context.NotesModels.Where(g => g.Id == noteId).FirstOrDefault();
+        //    updatableRow.IsPin = isPin;
+
+        //    ////saving the changes to the database
+        //    this.context.SaveChanges();
+
+        //    ////returning the list of notes
+        //    IEnumerable<NotesModel> result = this.context.NotesModels.Where(g => g.IsPin == true);
+        //    return result.ToList();
+        //}
+
+        /// <summary>
+        /// adding the reminder
+        /// </summary>
+        /// <param name="noteId">note id</param>
+        /// <param name="time">time</param>
+        /// <returns>returns success and failure message</returns>
+        public string AddReminder(int noteId, DateTime time)
+        {
+            ////getting the row according to the note id
+            var updatableRow = this.context.NotesModels.Where(g => g.Id == noteId).FirstOrDefault();
+            
+            ////setting the reminder time
+            updatableRow.Reminder = time;
+
+            ////saving the changes to the database
+            var result = this.context.SaveChanges();
+            if(result != 0)
+            {
+                return "reminder added successfully";
+            }
+            else
+            {
+                return "reminder not added";
+            }
+        }
+
+        /// <summary>
+        /// removing the reminder
+        /// </summary>
+        /// <param name="noteId">note id</param>
+        /// <returns>returns success and failure message</returns>
+        public string DeleteReminder(int noteId)
+        {
+            ////getting the row according to the noteid
+            var updatableRow = this.context.NotesModels.Where(u => u.Id == noteId).FirstOrDefault();
+
+            ////setting the reminder value null
+            updatableRow.Reminder = null;
+
+            ////saving the changes to the database
+            var result = this.context.SaveChanges();
+            if(result != 0)
+            {
+                return "reminder removed";
+            }
+            else
+            {
+                return "somthing went wrong";
+            }
         }
     }
 }

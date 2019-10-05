@@ -9,6 +9,7 @@ namespace BusinessLayer.Service
 {
     using BusinessLayer.Interface;
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Http;
     using RepositoryLayer.Interface;
     using ServiceStack.Redis;
     using System;
@@ -128,10 +129,21 @@ namespace BusinessLayer.Service
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<string> ResetPassword(ResetPasswordModel model)
+        public async Task<string> ResetPassword(ResetPasswordModel model, string token)
         {
-            var result = await this.accountManagerRepository.ResetPassword(model);
+            var result = await this.accountManagerRepository.ResetPassword(model, token);
             return result;
+        }
+
+        /// <summary>
+        /// image upload
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public string UploadImage(IFormFile file, string userId)
+        {
+            return this.accountManagerRepository.UploadImage(file, userId);
         }
     }
 }

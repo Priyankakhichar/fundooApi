@@ -7,13 +7,17 @@
 ////-------------------------------------------------------------------------------------------------------------------------------
 namespace RepositoryLayer.Services
 {
+    using CommonLayer;
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
+    using RepositoryLayer.Context;
     using RepositoryLayer.Interface;
     using System;
     using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
@@ -27,6 +31,11 @@ namespace RepositoryLayer.Services
         /// UserManager instance variable
         /// </summary>
         private UserManager<ApplicationUser> _userManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private AuthenticationContext _context;
 
         /// <summary>
         /// SignInManager instance variable
@@ -44,11 +53,12 @@ namespace RepositoryLayer.Services
         /// <param name="userManager"></param>
         /// <param name="signInManager"></param>
         /// <param name="appSettings"></param>
-        public AccountManagerRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings)
+        public AccountManagerRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings, AuthenticationContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appSettings = appSettings.Value;
+            this._context = context;
         }
 
         /// <summary>
@@ -132,12 +142,12 @@ namespace RepositoryLayer.Services
                 ////msmq object
                 MSMQ msmq = new MSMQ();
 
-                ////generated email confirmation token
-                var token = this._userManager.GenerateEmailConfirmationTokenAsync(user);
-
+                //////generated token
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+               
                 ////sending the mail to queue
-                msmq.SendEmailToQueue(model.EmailId);
-                return token.ToString();
+                msmq.SendEmailToQueue(model.EmailId, code);
+                return code;
             }
             else
             {
@@ -150,14 +160,47 @@ namespace RepositoryLayer.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<string> ResetPassword(ResetPasswordModel model)
+        public async Task<string> ResetPassword(ResetPasswordModel model, string token)
         {
-            var user = await this._userManager.FindByEmailAsync(model.EmailId); 
-            if(!user.Equals(null))
+             var user = await this._userManager.FindByEmailAsync(model.Email); 
+            
+            if (!user.Equals(null))
             {
-                var token = await this._userManager.GeneratePasswordResetTokenAsync(user);
                 var result = await this._userManager.ResetPasswordAsync(user, token, model.Password);
                 return result.ToString();
+            }
+            else
+            {
+                return "somthing went wrong";
+            }
+        }
+
+        /// <summary>
+        /// uploading the image
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public string UploadImage(IFormFile file, string userId)
+        {
+
+            ////object created of custom class ImageCloudinary
+            ImageCloudinary cloudinary = new ImageCloudinary();
+
+            ////getting the url from cloudinary class
+            var url = cloudinary.UploadImageAtCloudinary(file);
+
+            ////getting the row according to the user id
+            var updatableRow = this._context.ApplicationUser.Where(u => u.Id == userId).FirstOrDefault();
+
+            ////updating the url  to image attribute
+            updatableRow.Image = url;
+
+            ////saving the changes to the database
+            var result = this._context.SaveChanges();
+            if(result > 0)
+            {
+                return "image uploaded successfully";
             }
             else
             {

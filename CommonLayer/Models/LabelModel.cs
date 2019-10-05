@@ -46,7 +46,7 @@ namespace CommonLayer.Models
         /// <summary>
         /// created date
         /// </summary>
-        public DateTime CreatedDate
+        public DateTime? CreatedDate
         {
             get; set;
         }
@@ -54,7 +54,7 @@ namespace CommonLayer.Models
         /// <summary>
         /// modified date
         /// </summary>
-        public DateTime ModifiedDate
+        public DateTime? ModifiedDate
         {
             get; set;
         }

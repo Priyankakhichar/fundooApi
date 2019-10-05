@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "e425373339602f7d73b71c162a9556587a7921c1"
+    "signature": "a4e45fec7fafa72a498082fa8b813010f22b791f"
   },
   "compilationOptions": {
     "defines": [
@@ -53,6 +53,20 @@
         },
         "compile": {
           "lib/netstandard2.0/Ben.Demystifier.dll": {}
+        }
+      },
+      "CloudinaryDotNet/1.8.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {
+            "assemblyVersion": "1.8.0.0",
+            "fileVersion": "1.8.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {}
         }
       },
       "Elasticsearch.Net/7.3.0": {
@@ -1472,6 +1486,7 @@
       },
       "CommonLayer/1.0.0": {
         "dependencies": {
+          "CloudinaryDotNet": "1.8.0",
           "Experimental.System.Messaging": "1.0.0",
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.Extensions.Identity.Stores": "2.1.1",
@@ -1486,6 +1501,7 @@
       },
       "RepositoryLayer/1.0.0": {
         "dependencies": {
+          "CloudinaryDotNet": "1.8.0",
           "CommonLayer": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.1.1",
           "ServiceStack.Redis": "5.6.0",
@@ -4210,6 +4226,13 @@
       "sha512": "sha512-72yB6sCgTKX6Wv3pZnbkANJrC4JzxPnss4LuaUpIeRiiIrfWKJw6/DNaFUYAckx6EluP3YydHreIvJT9tnljJA==",
       "path": "ben.demystifier/0.1.2",
       "hashPath": "ben.demystifier.0.1.2.nupkg.sha512"
+    },
+    "CloudinaryDotNet/1.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jrxUPvVmdGL+8wDGQn4rBrRh7jKPDTqUW1kBj+fwmGdiMW5aBArQ3P2ErnYA84AQgvJnb2JwP3WTlwD2Yc/kdA==",
+      "path": "cloudinarydotnet/1.8.0",
+      "hashPath": "cloudinarydotnet.1.8.0.nupkg.sha512"
     },
     "Elasticsearch.Net/7.3.0": {
       "type": "package",

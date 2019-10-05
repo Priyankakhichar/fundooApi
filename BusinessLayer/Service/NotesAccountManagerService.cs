@@ -8,7 +8,9 @@
 namespace BusinessLayer.Service
 {
     using BusinessLayer.Interface;
+    using CommonLayer.Enum;
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Http;
     using RepositoryLayer.Interface;
     using ServiceStack.Redis;
     using System;
@@ -151,15 +153,78 @@ namespace BusinessLayer.Service
             }
         }
 
-        public async Task<string> AddImage(string image)
+        /// <summary>
+        /// uploading image to notes
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="noteId"></param>
+        /// <returns></returns>
+        public string AddImage(IFormFile file, int noteId)
         {
             try
             {
-                return this.accountRepository.AddImage(image);
+                ////added the reference to the repository class
+                return this.accountRepository.AddImage(file, noteId);
             }
             catch (Exception ex)
             {
-                throw new Exception();
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// is pin method to get list of pin notes
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <param name="isPin"></param>
+        /// <returns></returns>
+        //public IEnumerable<NotesModel> IsPin(int noteId, bool isPin)
+        //{
+        //    try
+        //    {
+        //        ////added the reference to the repository class
+        //        return this.accountRepository.IsPin(noteId, isPin);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //}
+
+        /// <summary>
+        /// adding the reminder
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public string AddReminder(int noteId, DateTime time)
+        {
+            try
+            {
+                ////added the reference to the repository class
+                return this.accountRepository.AddReminder(noteId, time);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// removing the reminder
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <returns></returns>
+        public string DeleteReminder(int noteId)
+        {
+            try
+            {
+                ////added the reference to the repository class
+                return this.accountRepository.DeleteReminder(noteId);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

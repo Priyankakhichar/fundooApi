@@ -11,6 +11,7 @@ namespace FundooNoteApi.Controllers
     using System.Threading.Tasks;
     using BusinessLayer.Interface;
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -106,9 +107,9 @@ namespace FundooNoteApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("resetPassword")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model, string token)
         {
-            var result = await this._accountmanager.ResetPassword(model);
+            var result = await this._accountmanager.ResetPassword(model, token);
             if (result != null)
             {
                 return this.Ok(new { result });
@@ -117,6 +118,13 @@ namespace FundooNoteApi.Controllers
             {
                 throw new Exception("");
             }
+        }
+
+        [HttpPost]
+        [Route("uploadImage")]
+        public string UploadImage(IFormFile filePath, string userId)
+        {
+            return this._accountmanager.UploadImage(filePath, userId);
         }
     }
 }

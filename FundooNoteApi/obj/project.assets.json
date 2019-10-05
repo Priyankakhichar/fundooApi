@@ -14,6 +14,18 @@
           "lib/netstandard2.0/Ben.Demystifier.dll": {}
         }
       },
+      "CloudinaryDotNet/1.8.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {}
+        }
+      },
       "Elasticsearch.Net/7.3.0": {
         "type": "package",
         "dependencies": {
@@ -5264,6 +5276,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v2.1",
         "dependencies": {
+          "CloudinaryDotNet": "1.8.0",
           "Experimental.System.Messaging": "1.0.0",
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.Extensions.Identity.Stores": "2.1.1",
@@ -5280,6 +5293,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v2.1",
         "dependencies": {
+          "CloudinaryDotNet": "1.8.0",
           "CommonLayer": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.1.1",
           "ServiceStack.Redis": "5.6.0",
@@ -5322,6 +5336,23 @@
         "src/Ben.Demystifier/StringBuilderExtentions.cs",
         "src/Ben.Demystifier/TypeNameHelper.cs",
         "src/Ben.Demystifier/ValueTupleResolvedParameter.cs"
+      ]
+    },
+    "CloudinaryDotNet/1.8.0": {
+      "sha512": "jrxUPvVmdGL+8wDGQn4rBrRh7jKPDTqUW1kBj+fwmGdiMW5aBArQ3P2ErnYA84AQgvJnb2JwP3WTlwD2Yc/kdA==",
+      "type": "package",
+      "path": "cloudinarydotnet/1.8.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "cloudinarydotnet.1.8.0.nupkg.sha512",
+        "cloudinarydotnet.nuspec",
+        "lib/net40/CloudinaryDotNet.dll",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/netcore/CloudinaryDotNet.deps.json",
+        "lib/netcore/CloudinaryDotNet.dll",
+        "lib/netstandard1.3/CloudinaryDotNet.deps.json",
+        "lib/netstandard1.3/CloudinaryDotNet.dll"
       ]
     },
     "Elasticsearch.Net/7.3.0": {

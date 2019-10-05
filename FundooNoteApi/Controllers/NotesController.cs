@@ -11,8 +11,10 @@ namespace FundooNoteApi.Controllers
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using BusinessLayer.Interface;
+    using CommonLayer.Enum;
     using CommonLayer.Models;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -104,18 +106,55 @@ namespace FundooNoteApi.Controllers
                 throw new Exception();
             }
         }
-        public IActionResult AddImage(string image)
+        /// <summary>
+        /// uploading image at cloudinary and storing cloudinary link to the database
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="noteId"></param>
+        /// <returns>returns the success or fail message</returns>
+        [HttpPost]
+        [Route("upoadImage")]
+        public string UploadImage(IFormFile filePath, int noteId)
         {
-            var result = this.noteManager.AddImage(image);
-            if(result != null)
-            {
-                return result;
-            }
-            else
-            {
-                this.BadRequest();
-            }
+            return this.noteManager.AddImage(filePath, noteId);    
         }
-       
+
+        /// <summary>
+        /// is pin method to get list of notes that is pinned
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <param name="isPin"></param>
+        /// <returns></returns>
+        //[HttpPut]
+        //[Route("isPin")]
+        //public IEnumerable<NotesModel> IsPin(int noteId, bool isPin)
+        //{
+        //    return this.noteManager.IsPin(noteId, isPin);
+        //}
+
+        /// <summary>
+        /// add reminder method to add reminder to the notes
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("reminder")]
+        public string AddReminder(int noteId, DateTime time)
+        {
+            return this.noteManager.AddReminder(noteId, time);
+        }
+
+        /// <summary>
+        /// remove reminder method to remove reminder from notes
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("removeReminder")]
+        public string DeleteReminder(int noteId)
+        {
+            return this.noteManager.DeleteReminder(noteId);
+        }
     }
 }

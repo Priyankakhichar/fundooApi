@@ -25,11 +25,11 @@ namespace RepositoryLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreatedDate");
+                    b.Property<DateTime?>("CreatedDate");
 
                     b.Property<string>("LableName");
 
-                    b.Property<DateTime>("ModifiedDate");
+                    b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("UserId");
 
@@ -46,7 +46,7 @@ namespace RepositoryLayer.Migrations
 
                     b.Property<string>("Color");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTime?>("CreateDate");
 
                     b.Property<string>("Description");
 
@@ -54,11 +54,11 @@ namespace RepositoryLayer.Migrations
 
                     b.Property<bool>("IsPin");
 
-                    b.Property<DateTime>("ModifiedDate");
+                    b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<int>("NoteType");
 
-                    b.Property<DateTime>("Reminder");
+                    b.Property<DateTime?>("Reminder");
 
                     b.Property<string>("Title");
 
@@ -245,6 +245,8 @@ namespace RepositoryLayer.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Image");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(150)");

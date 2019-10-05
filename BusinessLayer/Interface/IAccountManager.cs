@@ -8,6 +8,7 @@
 namespace BusinessLayer.Interface
 {
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Http;
     using System.Threading.Tasks;
     /// <summary>
     /// IAccountInterface has method for registration, login and forget password
@@ -40,6 +41,14 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<string> ResetPassword(ResetPasswordModel model);
+        Task<string> ResetPassword(ResetPasswordModel model, string token);
+
+        /// <summary>
+        /// image upload
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        string UploadImage(IFormFile file, string userId);
     }
 }

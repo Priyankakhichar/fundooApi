@@ -1,19 +1,28 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "978499f8952b9b1f2ffaa5757b5c79e3ce24d9a7"
+    "signature": "d0e7bbb962bb53eacd86481fb55bafec6d69360b"
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v2.1": {
       "CommonLayer/1.0.0": {
         "dependencies": {
+          "CloudinaryDotNet": "1.8.0",
           "Experimental.System.Messaging": "1.0.0",
           "Microsoft.NETCore.App": "2.1.0",
           "NEST": "7.3.0"
         },
         "runtime": {
           "CommonLayer.dll": {}
+        }
+      },
+      "CloudinaryDotNet/1.8.0": {
+        "runtime": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {
+            "assemblyVersion": "1.8.0.0",
+            "fileVersion": "1.8.0.0"
+          }
         }
       },
       "Elasticsearch.Net/7.3.0": {
@@ -87,6 +96,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "CloudinaryDotNet/1.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jrxUPvVmdGL+8wDGQn4rBrRh7jKPDTqUW1kBj+fwmGdiMW5aBArQ3P2ErnYA84AQgvJnb2JwP3WTlwD2Yc/kdA==",
+      "path": "cloudinarydotnet/1.8.0",
+      "hashPath": "cloudinarydotnet.1.8.0.nupkg.sha512"
     },
     "Elasticsearch.Net/7.3.0": {
       "type": "package",
