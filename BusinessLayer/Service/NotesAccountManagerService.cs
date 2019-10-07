@@ -8,6 +8,7 @@
 namespace BusinessLayer.Service
 {
     using BusinessLayer.Interface;
+    using CommonLayer;
     using CommonLayer.Enum;
     using CommonLayer.Models;
     using Microsoft.AspNetCore.Http;
@@ -162,34 +163,22 @@ namespace BusinessLayer.Service
         public string AddImage(IFormFile file, int noteId)
         {
             try
-            {
+            { 
+                ////object of custom class Image Cloudinary
+            ImageCloudinary cloudinary = new ImageCloudinary();
+
+            ////url from cloudinary
+            var url = cloudinary.UploadImageAtCloudinary(file);
+
+            
                 ////added the reference to the repository class
-                return this.accountRepository.AddImage(file, noteId);
+                return this.accountRepository.AddImage(url, noteId);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
-        /// <summary>
-        /// is pin method to get list of pin notes
-        /// </summary>
-        /// <param name="noteId"></param>
-        /// <param name="isPin"></param>
-        /// <returns></returns>
-        //public IEnumerable<NotesModel> IsPin(int noteId, bool isPin)
-        //{
-        //    try
-        //    {
-        //        ////added the reference to the repository class
-        //        return this.accountRepository.IsPin(noteId, isPin);
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
-        //    }
-        //}
 
         /// <summary>
         /// adding the reminder

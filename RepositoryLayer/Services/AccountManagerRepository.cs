@@ -21,6 +21,7 @@ namespace RepositoryLayer.Services
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
+    using System.IdentityModel.Tokens;
 
     /// <summary>
     /// AccountManagerRepository class having main functionality
@@ -137,17 +138,42 @@ namespace RepositoryLayer.Services
         public async Task<string> ForgetPassword(ForgetPasswordModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.EmailId);
-            if(user != null)
+            if (user != null)
             {
                 ////msmq object
                 MSMQ msmq = new MSMQ();
 
-                //////generated token
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-               
-                ////sending the mail to queue
-                msmq.SendEmailToQueue(model.EmailId, code);
-                return code;
+              
+                    ////it creates the SecurityTokenDescriptor
+                    var tokenDescripter = new SecurityTokenDescriptor
+                    {
+                        Subject = new ClaimsIdentity(new Claim[]
+                        {
+                        new Claim("Email", user.Email.ToString())
+                        }),
+                        ////DateTime.UtcNow sets the current system time. it allow user login for 30 minutes
+                        Expires = DateTime.UtcNow.AddDays(1),
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+                    };
+
+                    var tokenHandler = new JwtSecurityTokenHandler();
+
+                    ////it creates the security token
+                    var securityToken = tokenHandler.CreateToken(tokenDescripter);
+
+                    ////it writes security token to the token variable.
+                    var token = tokenHandler.WriteToken(securityToken);
+                    msmq.SendEmailToQueue(model.EmailId, token);
+                   
+
+                    ////////generated token
+                    //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    ////sending the mail to queue
+                    //    msmq.SendEmailToQueue(model.EmailId, code);
+                    //return code;
+                
+                return token;
             }
             else
             {
@@ -160,13 +186,21 @@ namespace RepositoryLayer.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<string> ResetPassword(ResetPasswordModel model, string token)
+        public async Task<string> ResetPassword(ResetPasswordModel model, string tokenString)
         {
-             var user = await this._userManager.FindByEmailAsync(model.Email); 
-            
+             
+
+            var token = new JwtSecurityToken(jwtEncodedString: tokenString);
+
+            var email = token.Claims.First(c => c.Type == "Email").Value;
+
+            var user = await this._userManager.FindByEmailAsync(email);
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
             if (!user.Equals(null))
             {
-                var result = await this._userManager.ResetPasswordAsync(user, token, model.Password);
+                var result = await this._userManager.ResetPasswordAsync(user, code, model.Password);
                 return result.ToString();
             }
             else
@@ -181,30 +215,33 @@ namespace RepositoryLayer.Services
         /// <param name="file"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public string UploadImage(IFormFile file, string userId)
+        public string UploadImage(string url, string userId)
         {
 
-            ////object created of custom class ImageCloudinary
-            ImageCloudinary cloudinary = new ImageCloudinary();
-
-            ////getting the url from cloudinary class
-            var url = cloudinary.UploadImageAtCloudinary(file);
-
-            ////getting the row according to the user id
-            var updatableRow = this._context.ApplicationUser.Where(u => u.Id == userId).FirstOrDefault();
-
-            ////updating the url  to image attribute
-            updatableRow.Image = url;
-
-            ////saving the changes to the database
-            var result = this._context.SaveChanges();
-            if(result > 0)
+            var user = this._userManager.FindByIdAsync(userId);
+            if (user != null)
             {
-                return "image uploaded successfully";
+                ////getting the row according to the user id
+                var updatableRow = this._context.ApplicationUser.Where(u => u.Id == userId).FirstOrDefault();
+
+                ////updating the url  to image attribute
+                updatableRow.Image = url;
+
+                ////saving the changes to the database
+                var result = this._context.SaveChanges();
+
+                if (result > 0)
+                {
+                    return "image uploaded successfully";
+                }
+                else
+                {
+                    return "somthing went wrong";
+                }
             }
             else
             {
-                return "somthing went wrong";
+                return "user not exist";
             }
         }
     }

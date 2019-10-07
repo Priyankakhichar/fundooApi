@@ -54,15 +54,7 @@ namespace RepositoryLayer.Interface
         /// <param name="file">file</param>
         /// <param name="noteId">noteId</param>
         /// <returns>returns the success or failure message</returns>
-        string AddImage(IFormFile file, int noteId);
-
-        /// <summary>
-        /// list of pin notes
-        /// </summary>
-        /// <param name="noteId">noteId</param>
-        /// <param name="isPin">isPin</param>
-        /// <returns>returns list</returns>
-       /// IEnumerable<NotesModel> IsPin(int noteId, bool isPin);
+        string AddImage(string url, int noteId);
 
         /// <summary>
         /// adding the reminder

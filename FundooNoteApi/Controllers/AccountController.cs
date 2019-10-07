@@ -11,6 +11,7 @@ namespace FundooNoteApi.Controllers
     using System.Threading.Tasks;
     using BusinessLayer.Interface;
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -122,6 +123,7 @@ namespace FundooNoteApi.Controllers
 
         [HttpPost]
         [Route("uploadImage")]
+        [Authorize]
         public string UploadImage(IFormFile filePath, string userId)
         {
             return this._accountmanager.UploadImage(filePath, userId);

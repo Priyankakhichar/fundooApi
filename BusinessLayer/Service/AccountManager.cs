@@ -8,6 +8,7 @@
 namespace BusinessLayer.Service
 {
     using BusinessLayer.Interface;
+    using CommonLayer;
     using CommonLayer.Models;
     using Microsoft.AspNetCore.Http;
     using RepositoryLayer.Interface;
@@ -77,25 +78,24 @@ namespace BusinessLayer.Service
                     var result = await this.accountManagerRepository.Login(loginModel);
                     if(result != null)
                     {
+                        ////storing the current time in the variable
                         var newLoginTime = DateTime.Now.ToString();
                         
                         using (var redis = new RedisClient())
                         {
+                            ////getting the logintime from redis
                             if (redis.Get("lastLogin" + loginModel.UserName) == null)
                             {
+                                ////setting the login time to the redis
                                 redis.Set("lastLogin" + loginModel.UserName, newLoginTime);
                             }
                             else
                             {
-                               
+                                ////changing the datetime formate to the string formate
                                 string utfString =  System.Text.Encoding.UTF8.GetString(redis.Get("lastLogin" + loginModel.UserName));
                                 redis.Set("lastLogin" + loginModel.UserName, newLoginTime);
                                 lastLoginTime = "+" + utfString;
-                           
                             }
-                           // string utfString1 = System.Text.Encoding.UTF8.GetString(redis.Get("lastLogin" + loginModel.UserName));
-                           // redis.Set("lastLogin", newLoginTime);
-                           //// return utfString1;
                         }
                     }
 
@@ -143,7 +143,21 @@ namespace BusinessLayer.Service
         /// <returns></returns>
         public string UploadImage(IFormFile file, string userId)
         {
-            return this.accountManagerRepository.UploadImage(file, userId);
+            try
+            {
+
+                ////object created of custom class ImageCloudinary
+                ImageCloudinary cloudinary = new ImageCloudinary();
+
+                ////getting the url from cloudinary class
+                var url = cloudinary.UploadImageAtCloudinary(file);
+
+                return this.accountManagerRepository.UploadImage(url, userId);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Invalid file");
+            }
         }
     }
 }

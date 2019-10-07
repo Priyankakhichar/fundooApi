@@ -19,6 +19,7 @@ namespace RepositoryLayer.Services
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     public class NotesAccountManagerRepository : INotesAccountManagerRepository
     {
         /// <summary>
@@ -168,17 +169,12 @@ namespace RepositoryLayer.Services
         /// <param name="file">file</param>
         /// <param name="noteId">noteId</param>
         /// <returns></returns>
-       public string AddImage(IFormFile file, int noteId)
+       public string AddImage(string url, int noteId)
         {
-            ////object of custom class Image Cloudinary
-            ImageCloudinary cloudinary = new ImageCloudinary();
-
-            ////url from cloudinary
-            var url = cloudinary.UploadImageAtCloudinary(file);
-
+            
             ////getting the row according to the note id
             var updatableRow = context.NotesModels.Where(u => u.Id == noteId).FirstOrDefault();
-
+           
             ////placing the url
             updatableRow.Image = url;
             var result = this.context.SaveChanges();
@@ -191,26 +187,6 @@ namespace RepositoryLayer.Services
                 return "image upload failed";
             }
         }
-
-        ///// <summary>
-        ///// Is pin method to returns list of pinned notes
-        ///// </summary>
-        ///// <param name="noteId"></param>
-        ///// <param name="isPin"></param>
-        ///// <returns>returns the list of notes which is pinned</returns>
-        //public IEnumerable<NotesModel> IsPin(int noteId, bool isPin)
-        //{
-        //    ////getting the rows according to the note id
-        //    var updatableRow = this.context.NotesModels.Where(g => g.Id == noteId).FirstOrDefault();
-        //    updatableRow.IsPin = isPin;
-
-        //    ////saving the changes to the database
-        //    this.context.SaveChanges();
-
-        //    ////returning the list of notes
-        //    IEnumerable<NotesModel> result = this.context.NotesModels.Where(g => g.IsPin == true);
-        //    return result.ToList();
-        //}
 
         /// <summary>
         /// adding the reminder

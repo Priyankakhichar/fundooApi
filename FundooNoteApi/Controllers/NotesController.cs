@@ -120,19 +120,6 @@ namespace FundooNoteApi.Controllers
         }
 
         /// <summary>
-        /// is pin method to get list of notes that is pinned
-        /// </summary>
-        /// <param name="noteId"></param>
-        /// <param name="isPin"></param>
-        /// <returns></returns>
-        //[HttpPut]
-        //[Route("isPin")]
-        //public IEnumerable<NotesModel> IsPin(int noteId, bool isPin)
-        //{
-        //    return this.noteManager.IsPin(noteId, isPin);
-        //}
-
-        /// <summary>
         /// add reminder method to add reminder to the notes
         /// </summary>
         /// <param name="noteId"></param>

@@ -57,14 +57,6 @@ namespace BusinessLayer.Interface
         string AddImage(IFormFile file, int noteId);
 
         /// <summary>
-        /// is pin method to get list
-        /// </summary>
-        /// <param name="noteId"></param>
-        /// <param name="isPin"></param>
-        /// <returns></returns>
-       /// IEnumerable<NotesModel> IsPin(int noteId, bool isPin);
-
-        /// <summary>
         /// add reminder method
         /// </summary>
         /// <param name="noteId"></param>

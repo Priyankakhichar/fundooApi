@@ -45,6 +45,6 @@ namespace RepositoryLayer.Interface
         /// <param name="file"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        string UploadImage(IFormFile file, string userId);
+        string UploadImage(string url, string userId);
     }
 }

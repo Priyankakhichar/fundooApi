@@ -15,10 +15,10 @@ namespace CommonLayer.Models
         /// <summary>
         /// email id 
         /// </summary>
-        public string Email
-        {
-            get; set;
-        }
+        //public string Email
+        //{
+        //    get; set;
+        //}
         /// <summary>
         /// password
         /// </summary>
