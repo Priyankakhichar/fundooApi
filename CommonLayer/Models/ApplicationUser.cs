@@ -37,5 +37,9 @@ namespace CommonLayer.Models
         {
             get; set;
         }
+        public string Token
+        {
+            get; set;
+        }
     }
 }

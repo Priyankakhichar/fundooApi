@@ -46,7 +46,7 @@ namespace RepositoryLayer.Interface
         /// </summary>
         /// <param name="userId">userId</param>
         /// <returns>returns list of notes</returns>
-        IList<NotesModel> GetNotes(string userId, EnumNoteType noteType);
+        (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType);
 
         /// <summary>
         /// uploading image to Cloudinary
@@ -70,5 +70,32 @@ namespace RepositoryLayer.Interface
         /// <param name="noteId">note-id</param>
         /// <returns>returns the success or failure message</returns>
         string DeleteReminder(int noteId);
+
+        /// <summary>
+        /// sending push notification
+        /// </summary>
+        /// <returns></returns>
+        IList<NotesModel> SendPushNotification();
+
+        /// <summary>
+        /// adding collaborator
+        /// </summary>
+        /// <param name="collaboration"></param>
+        /// <returns></returns>
+        Task<string> AddCollabration(NotesCollaboration collaboration);
+
+        /// <summary>
+        /// removing collabration
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<string> RemoveCollabration(int id);
+
+        /// <summary>
+        /// searching notes by title
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <returns></returns>
+        IList<NotesModel> Search(string searchString);
     }
 }

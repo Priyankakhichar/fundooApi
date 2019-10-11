@@ -20,9 +20,9 @@ namespace FundooNoteApi.Controllers
     /// <summary>
     /// notes controller
     /// </summary>
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class NotesController : ControllerBase
     {
         /// <summary>
@@ -44,6 +44,7 @@ namespace FundooNoteApi.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        
         [HttpPost]
         [Route("addNotes")]
         public async Task<bool> AddNotes(NotesModel model)
@@ -58,6 +59,7 @@ namespace FundooNoteApi.Controllers
         /// <param name="model"></param>
         /// <param name="id"></param>
         /// <returns></returns>
+        
         [HttpPut]
         [Route("updateNotes/{id}")]
         public async Task<bool> UpdateNotes(NotesModel model, int id)
@@ -71,6 +73,7 @@ namespace FundooNoteApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        
         [HttpDelete]
         [Route("deleteNotes/{id}")]
         public async Task<IActionResult> DeleteNotes(int id)
@@ -92,12 +95,13 @@ namespace FundooNoteApi.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
+        
         [HttpGet]
         [Route("getNotes/{userId}")]
-        public IList<NotesModel> GetNotes(string userId, EnumNoteType noteType)
+        public (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType)
         {
             var result = this.noteManager.GetNotes(userId, noteType);
-            if (result != null)
+            if (result != (null,null))
             {
                 return result;
             }
@@ -106,12 +110,15 @@ namespace FundooNoteApi.Controllers
                 throw new Exception();
             }
         }
+
+
         /// <summary>
         /// uploading image at cloudinary and storing cloudinary link to the database
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="noteId"></param>
         /// <returns>returns the success or fail message</returns>
+        
         [HttpPost]
         [Route("upoadImage")]
         public string UploadImage(IFormFile filePath, int noteId)
@@ -125,6 +132,7 @@ namespace FundooNoteApi.Controllers
         /// <param name="noteId"></param>
         /// <param name="time"></param>
         /// <returns></returns>
+        
         [HttpPut]
         [Route("reminder")]
         public string AddReminder(int noteId, DateTime time)
@@ -137,11 +145,74 @@ namespace FundooNoteApi.Controllers
         /// </summary>
         /// <param name="noteId"></param>
         /// <returns></returns>
+        
         [HttpDelete]
         [Route("removeReminder")]
         public string DeleteReminder(int noteId)
         {
             return this.noteManager.DeleteReminder(noteId);
+        }
+
+        /// <summary>
+        /// sending push notification
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("sendMessage")]
+        public IActionResult SendPushNotification()
+       {
+             var result =  this.noteManager.SendPushNotification();
+            if (result != null)
+            {
+                return Ok(new { result });
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        /// <summary>
+        /// Adding collaboration
+        /// </summary>
+        /// <param name="collaboration"></param>
+        /// <returns></returns>
+        
+        [HttpPost]
+        [Route("collaboration")]
+        public async Task<IActionResult> AddCollabration(NotesCollaboration collaboration)
+        {
+            var result = await this.noteManager.AddCollabration(collaboration);
+            return Ok(new { result });
+        }
+         
+        /// <summary>
+        /// removing collaboration
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        
+        [HttpDelete]
+        [Route("remove")]
+        public async Task<IActionResult> RemoveCollabration(int id)
+        {
+            var result = await this.noteManager.RemoveCollabration(id);
+            return Ok(new { result });
+        }
+
+        /// <summary>
+        /// search operation by title or description
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <returns></returns>
+        
+        [HttpGet]
+        [Route("search")]
+        public IActionResult Search(string searchString)
+        {
+            var result = this.noteManager.Search(searchString);
+            return Ok(new { result });
         }
     }
 }

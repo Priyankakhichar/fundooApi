@@ -38,6 +38,23 @@ namespace RepositoryLayer.Migrations
                     b.ToTable("LabelModels");
                 });
 
+            modelBuilder.Entity("CommonLayer.Models.NotesCollaboration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<int>("NoteId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Collaborations");
+                });
+
             modelBuilder.Entity("CommonLayer.Models.NotesModel", b =>
                 {
                     b.Property<int>("Id")
@@ -250,6 +267,8 @@ namespace RepositoryLayer.Migrations
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Token");
 
                     b.ToTable("ApplicationUser");
 

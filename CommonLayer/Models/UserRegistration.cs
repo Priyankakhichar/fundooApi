@@ -65,6 +65,13 @@ namespace CommonLayer.Models
         [Required]
         [StringLength(15, MinimumLength = 3)]
         public string UserName { get; set; }
+        /// <summary>
+        /// token
+        /// </summary>
+        public string Token
+        {
+            get; set;
+        }
        
     }
 }

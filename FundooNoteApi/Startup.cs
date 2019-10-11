@@ -126,7 +126,11 @@ namespace FundooNoteApi
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFandooApp");
             });
 
+            app.UseAuthentication();
+
             app.UseMvc();
+
+
         }
     }
     public class FileUploadedOperation : IOperationFilter

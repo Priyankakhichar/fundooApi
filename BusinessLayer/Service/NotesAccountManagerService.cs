@@ -12,10 +12,18 @@ namespace BusinessLayer.Service
     using CommonLayer.Enum;
     using CommonLayer.Models;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Nancy.Json;
+    using Newtonsoft.Json;
     using RepositoryLayer.Interface;
     using ServiceStack.Redis;
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Text;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -55,7 +63,7 @@ namespace BusinessLayer.Service
                     return false;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -68,8 +76,8 @@ namespace BusinessLayer.Service
         /// <returns>returns the number of rows deleted</returns>
         public async Task<int> DeleteNotes(int id)
         {
-                 var result = await this.accountRepository.DeleteNotes(id);
-                 return result;
+            var result = await this.accountRepository.DeleteNotes(id);
+            return result;
         }
 
         /// <summary>
@@ -116,37 +124,41 @@ namespace BusinessLayer.Service
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>returns the list of notes</returns>
-        public IList<NotesModel> GetNotes(string userId, EnumNoteType noteType)
+        public (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType)
         {
+
             try
             {
-                    var redisResult = new List<NotesModel>();
-                    ////declared a key to set data to the redis
-                    var cacheKey = "data" + userId;
-                    using (var redis = new RedisClient())
-                    {
-                    redis.Remove(cacheKey);
-                       ////condtion to check if there are record or not in redis
-                       if (redis.Get(cacheKey) == null)
-                       {
-                        ////getting the result from database
-                        var result = this.accountRepository.GetNotes(userId, noteType);
-                        if (result != null)
-                        {
-                            ////sets the data to the redis
-                            redis.Set(cacheKey, result);
+                ////getting the result from database
+                var result = this.accountRepository.GetNotes(userId, noteType);
+                //var redisResult = new List<NotesModel>();
 
-                            ////getting the list from redis
-                            redisResult = redis.Get<List<NotesModel>>(cacheKey); 
-                        }
-                    }
-                    else
-                    {
-                        redisResult = redis.Get<List<NotesModel>>(cacheKey);
-                    }
+                //////declared a key to set data to the redis
+                //var cacheKey = "data" + userId;
+                //using (var redis = new RedisClient())
+                //{
+                //    redis.Remove(cacheKey);
+                //    ////condtion to check if there are record or not in redis
+                //    if (redis.Get(cacheKey) == null)
+                //    {
+                //        ////getting the result from database
+                //       // var result = this.accountRepository.GetNotes(userId, noteType);
+                //        if (result.Item1 != null)
+                //        {
+                //            ////sets the data to the redis
+                //            redis.Set(cacheKey, result);
 
-                     return redisResult;
-                }
+                //            ////getting the list from redis
+                //            redisResult = redis.Get<List<NotesModel>>(cacheKey);
+                //        }
+                //    }
+                //    else
+                //    {
+                //        redisResult = redis.Get<List<NotesModel>>(cacheKey);
+                //    }
+
+                    return result;
+                
             }
             catch (Exception ex)
             {
@@ -163,14 +175,14 @@ namespace BusinessLayer.Service
         public string AddImage(IFormFile file, int noteId)
         {
             try
-            { 
+            {
                 ////object of custom class Image Cloudinary
-            ImageCloudinary cloudinary = new ImageCloudinary();
+                ImageCloudinary cloudinary = new ImageCloudinary();
 
-            ////url from cloudinary
-            var url = cloudinary.UploadImageAtCloudinary(file);
+                ////url from cloudinary
+                var url = cloudinary.UploadImageAtCloudinary(file);
 
-            
+
                 ////added the reference to the repository class
                 return this.accountRepository.AddImage(url, noteId);
             }
@@ -193,7 +205,7 @@ namespace BusinessLayer.Service
                 ////added the reference to the repository class
                 return this.accountRepository.AddReminder(noteId, time);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -210,6 +222,116 @@ namespace BusinessLayer.Service
             {
                 ////added the reference to the repository class
                 return this.accountRepository.DeleteReminder(noteId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public  IList<NotesModel> SendPushNotification()
+        {
+            var result =  this.accountRepository.SendPushNotification();
+            //var applicationID = "AAAA4k1xnn0:APA91bH9tprsl2ggN1H0FAAh6isGcvIWjADqJ34Q1pOJ2dngldRzBKHOYKctiFQWOZ4tRLGgwd88APJx2z-gJn5QroSIVJ2wnQV1w7SqNz6nV__vb52iSeHPE08BKsDo0JpLZyTLxDZO";
+            //var senderId = "971961900669";
+            //var deviceId = "fYDlq1Xg1FM:APA91bGC_pXsuVn3yku9mtlLaHWgn32RNGPBDWAo4rGL7z1uevJ-cY-BpsDH--2zdWVymaBzvovi4H3dfilPHGw08RxrJDsPnmlXKQo9CIGI4DgPOmTiFZnmj7lJ7ud0M9H762YthB-X";
+
+            //using (var client = new System.Net.Http.HttpClient())
+            //{
+            //    //do something with http client
+            //    client.BaseAddress = new Uri("https://fcm.googleapis.com");
+            //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //    client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"key={applicationID}");
+            //    client.DefaultRequestHeaders.TryAddWithoutValidation("Sender", $"id={senderId}");
+
+            //    var data = new
+            //    {
+            //    To = deviceId,
+            //    notification = new
+            //    {
+            //        message = "my first message",
+            //        name = "priyanka"
+            //    }
+            //   };
+            //var json = JsonConvert.SerializeObject(data);
+            //var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //var result = await client.PostAsync("/fcm/send", httpContent);
+            return result;
+
+        }
+
+        /// <summary>
+        /// adding the collabration
+        /// </summary>
+        /// <param name="collaboration"></param>
+        /// <returns></returns>
+        public async Task<string> AddCollabration(NotesCollaboration collaboration)
+        {
+            try
+            {
+                ////if collaboration attributes is not null it will go to the repository
+                if (collaboration != null)
+                {
+                    return await this.accountRepository.AddCollabration(collaboration);
+                }
+                else
+                {
+                    return "empty fields";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// remove collaboration
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>return success or failure message</returns>
+        public async Task<string> RemoveCollabration(int id)
+        {
+            try
+            {
+                if (id != 0)
+                {
+                    ////if id is not 0 it will go to the repository layer
+                    return await this.accountRepository.RemoveCollabration(id);
+
+                }
+                else
+                {
+                    return "invalid id";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// search operation by title
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <returns>returning the list of notes that title contains the search string</returns>
+       public IList<NotesModel> Search(string searchString)
+        {
+            try
+            {
+                ////if searchString is not empty it will go to the repository
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    return this.accountRepository.Search(searchString);
+                }
+                else
+                {
+                    ////if search string is empty it will throw the exception
+                    throw new Exception("empty string");
+                }
             }
             catch(Exception ex)
             {

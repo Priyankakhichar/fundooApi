@@ -34,5 +34,9 @@ namespace RepositoryLayer.Context
         {
             get; set;
         }
+        public DbSet<NotesCollaboration> Collaborations
+        {
+            get; set;
+        }
     }
 }

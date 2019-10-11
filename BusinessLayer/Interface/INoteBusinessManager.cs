@@ -12,6 +12,7 @@ namespace BusinessLayer.Interface
     using Microsoft.AspNetCore.Http;
     using System;
     using System.Collections.Generic;
+    using System.Net.Http;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -46,7 +47,7 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        IList<NotesModel> GetNotes(string userId, EnumNoteType noteType);
+        (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType);
 
         /// <summary>
         /// upload image
@@ -70,5 +71,9 @@ namespace BusinessLayer.Interface
         /// <param name="noteId"></param>
         /// <returns></returns>
         string DeleteReminder(int noteId);
+        IList<NotesModel> SendPushNotification();
+        Task<string> AddCollabration(NotesCollaboration collaboration);
+        Task<string> RemoveCollabration(int id);
+        IList<NotesModel> Search(string searchString);
     }
 }

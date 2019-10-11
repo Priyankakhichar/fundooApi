@@ -75,7 +75,8 @@ namespace RepositoryLayer.Services
                 FirstName = registration.FirstName,
                 LastName = registration.LastName,
                 Email = registration.EmailId,
-                UserName=registration.UserName
+                UserName = registration.UserName,
+                Token = registration.Token
             };
             try
             {
