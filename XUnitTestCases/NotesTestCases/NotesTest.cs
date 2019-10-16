@@ -13,6 +13,8 @@ namespace XUnitTestCases.NotesTestCases
     using System;
     using Xunit;
     using Moq;
+    using System.Collections.Generic;
+
     public class NotesTest
     {
         /// <summary>
@@ -70,6 +72,24 @@ namespace XUnitTestCases.NotesTestCases
 
             var result = notes.DeleteNotes(notesModel.Id);
             Assert.NotNull(result);
+        }
+
+        /// <summary>
+        /// Delete notes unit test case
+        /// </summary>
+        [Fact]
+        public async void DeleteNotesEqualsTest()
+        {
+            var notesData = new Mock<INotesAccountManagerRepository>();
+            var notes = new NotesAccountManagerService(notesData.Object);
+            var notesModel = new NotesModel()
+            {
+                Id = 5
+            };
+
+            object excepted = 1;
+            object actual = await notes.DeleteNotes(notesModel.Id);
+            Assert.NotEqual(excepted, actual);
         }
 
         /// <summary>

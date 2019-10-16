@@ -121,12 +121,40 @@ namespace FundooNoteApi.Controllers
             }
         }
 
+        /// <summary>
+        /// upload image
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("uploadImage")]
         [Authorize]
         public string UploadImage(IFormFile filePath, string userId)
         {
             return this._accountmanager.UploadImage(filePath, userId);
+        }
+
+        /// <summary>
+        /// social login
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("signin-facebook")]
+        [Authorize]
+        public async Task<IActionResult> SocialLogin(string email)
+        {
+            var result = await this._accountmanager.SocialLogin(email);
+            return Ok(new { result });
+        }
+
+        [HttpPost]
+        [Route("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var result = await this._accountmanager.Logout();
+            return Ok(new { result });
         }
     }
 }

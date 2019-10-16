@@ -86,6 +86,28 @@ namespace RepositoryLayer.Migrations
                     b.ToTable("NotesModels");
                 });
 
+            modelBuilder.Entity("CommonLayer.Models.ServiceModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .IsRequired();
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .IsRequired();
+
+                    b.Property<string>("ServiceName")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Service");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -267,6 +289,11 @@ namespace RepositoryLayer.Migrations
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("ServiceId");
 
                     b.Property<string>("Token");
 

@@ -11,7 +11,7 @@ namespace CommonLayer.Models
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
-    /// Application User clas is for identity
+    /// Application User class is for identity
     /// </summary>
     public class ApplicationUser : IdentityUser
     {
@@ -32,12 +32,36 @@ namespace CommonLayer.Models
         {
             get; set;
         }
+
+        /// <summary>
+        /// role type
+        /// </summary>
+        [Column(TypeName = "nvarchar(150)")]
+        public string Role
+        {
+            get; set;
+        }
        
+        /// <summary>
+        /// Image
+        /// </summary>
         public string Image
         {
             get; set;
         }
+
+        /// <summary>
+        /// Token
+        /// </summary>
         public string Token
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Service id 
+        /// </summary>
+        public int ServiceId
         {
             get; set;
         }

@@ -76,13 +76,15 @@ namespace RepositoryLayer.Services
                 LastName = registration.LastName,
                 Email = registration.EmailId,
                 UserName = registration.UserName,
-                Token = registration.Token
+                Token = registration.Token,
+                Role = registration.Role,
+                ServiceId = registration.ServiceId
             };
             try
             {
                 ////here applicationUser instance have details of user and second argument have password and adding these details to the database
                 var result = await _userManager.CreateAsync(applicationUser, registration.Password);
-               return result.Succeeded;
+                return result.Succeeded;
             }
             catch(Exception ex)
             {
@@ -237,13 +239,54 @@ namespace RepositoryLayer.Services
                 }
                 else
                 {
-                    return "somthing went wrong";
+                    return "something went wrong";
                 }
             }
             else
             {
                 return "user not exist";
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<string> SocialLogin(string email)
+        {
+            var user = await this._userManager.FindByEmailAsync(email);
+            if(user != null)
+            {
+                var tokenDescripter = new SecurityTokenDescriptor()
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                       new Claim("email", user.Email.ToString())
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+
+                ////it creates the security token
+                var securityToken = tokenHandler.CreateToken(tokenDescripter);
+
+                ////it writes security token to the token variable.
+                var newToken = tokenHandler.WriteToken(securityToken);
+                return newToken;
+            }
+            else
+            {
+                return "user not registered";
+            }
+        }
+
+        public async Task<string> Logout()
+        {
+             await this._signInManager.SignOutAsync();
+            return "user logged out";
         }
     }
 }

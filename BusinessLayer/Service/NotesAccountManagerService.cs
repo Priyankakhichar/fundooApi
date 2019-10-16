@@ -12,18 +12,10 @@ namespace BusinessLayer.Service
     using CommonLayer.Enum;
     using CommonLayer.Models;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Nancy.Json;
-    using Newtonsoft.Json;
     using RepositoryLayer.Interface;
     using ServiceStack.Redis;
     using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Text;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -76,8 +68,14 @@ namespace BusinessLayer.Service
         /// <returns>returns the number of rows deleted</returns>
         public async Task<int> DeleteNotes(int id)
         {
-            var result = await this.accountRepository.DeleteNotes(id);
-            return result;
+            try
+            {
+                return await this.accountRepository.DeleteNotes(id);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         /// <summary>
@@ -130,35 +128,7 @@ namespace BusinessLayer.Service
             try
             {
                 ////getting the result from database
-                var result = this.accountRepository.GetNotes(userId, noteType);
-                //var redisResult = new List<NotesModel>();
-
-                //////declared a key to set data to the redis
-                //var cacheKey = "data" + userId;
-                //using (var redis = new RedisClient())
-                //{
-                //    redis.Remove(cacheKey);
-                //    ////condtion to check if there are record or not in redis
-                //    if (redis.Get(cacheKey) == null)
-                //    {
-                //        ////getting the result from database
-                //       // var result = this.accountRepository.GetNotes(userId, noteType);
-                //        if (result.Item1 != null)
-                //        {
-                //            ////sets the data to the redis
-                //            redis.Set(cacheKey, result);
-
-                //            ////getting the list from redis
-                //            redisResult = redis.Get<List<NotesModel>>(cacheKey);
-                //        }
-                //    }
-                //    else
-                //    {
-                //        redisResult = redis.Get<List<NotesModel>>(cacheKey);
-                //    }
-
-                    return result;
-                
+                return this.accountRepository.GetNotes(userId, noteType);   
             }
             catch (Exception ex)
             {
@@ -229,43 +199,27 @@ namespace BusinessLayer.Service
             }
         }
 
-        public  IList<NotesModel> SendPushNotification()
+        /// <summary>
+        /// push notification
+        /// </summary>
+        /// <returns>returning the list of notes that have reminder between current time and after 10 min</returns>
+        public  async Task<IList<NotesModel>> SendPushNotification()
         {
-            var result =  this.accountRepository.SendPushNotification();
-            //var applicationID = "AAAA4k1xnn0:APA91bH9tprsl2ggN1H0FAAh6isGcvIWjADqJ34Q1pOJ2dngldRzBKHOYKctiFQWOZ4tRLGgwd88APJx2z-gJn5QroSIVJ2wnQV1w7SqNz6nV__vb52iSeHPE08BKsDo0JpLZyTLxDZO";
-            //var senderId = "971961900669";
-            //var deviceId = "fYDlq1Xg1FM:APA91bGC_pXsuVn3yku9mtlLaHWgn32RNGPBDWAo4rGL7z1uevJ-cY-BpsDH--2zdWVymaBzvovi4H3dfilPHGw08RxrJDsPnmlXKQo9CIGI4DgPOmTiFZnmj7lJ7ud0M9H762YthB-X";
-
-            //using (var client = new System.Net.Http.HttpClient())
-            //{
-            //    //do something with http client
-            //    client.BaseAddress = new Uri("https://fcm.googleapis.com");
-            //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //    client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"key={applicationID}");
-            //    client.DefaultRequestHeaders.TryAddWithoutValidation("Sender", $"id={senderId}");
-
-            //    var data = new
-            //    {
-            //    To = deviceId,
-            //    notification = new
-            //    {
-            //        message = "my first message",
-            //        name = "priyanka"
-            //    }
-            //   };
-            //var json = JsonConvert.SerializeObject(data);
-            //var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-            //var result = await client.PostAsync("/fcm/send", httpContent);
-            return result;
-
+            try
+            {
+                return await this.accountRepository.SendPushNotification();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         /// <summary>
         /// adding the collabration
         /// </summary>
         /// <param name="collaboration"></param>
-        /// <returns></returns>
+        /// <returns>returns the success and failure message</returns>
         public async Task<string> AddCollabration(NotesCollaboration collaboration)
         {
             try
@@ -295,11 +249,10 @@ namespace BusinessLayer.Service
         {
             try
             {
-                if (id != 0)
+                if (id > 0)
                 {
-                    ////if id is not 0 it will go to the repository layer
+                    ////if id is greater than 0 it will go to the repository layer
                     return await this.accountRepository.RemoveCollabration(id);
-
                 }
                 else
                 {
@@ -319,7 +272,7 @@ namespace BusinessLayer.Service
         /// <param name="searchString"></param>
         /// <returns>returning the list of notes that title contains the search string</returns>
        public IList<NotesModel> Search(string searchString)
-        {
+       {
             try
             {
                 ////if searchString is not empty it will go to the repository
@@ -337,6 +290,26 @@ namespace BusinessLayer.Service
             {
                 throw new Exception(ex.Message);
             }
+       }
+
+        public async Task<string> BulkTrash(IList<int> noteId)
+        {
+
+            if (noteId != null)
+            {
+                try
+                {
+                    return await this.accountRepository.BulkTrash(noteId);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
+            else
+            {
+                return "list is empty";
+            }   
         }
     }
 }

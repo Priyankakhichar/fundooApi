@@ -80,13 +80,13 @@ namespace FundooNoteApi.Controllers
         {
 
             var result = await this.noteManager.DeleteNotes(id);
-            if (result == 1)
+            if (result != 0)
             {
                 return this.Ok(new { result });
             }
             else
             {
-                return this.BadRequest();
+                return this.NotFound();
             }
         }
 
@@ -98,6 +98,7 @@ namespace FundooNoteApi.Controllers
         
         [HttpGet]
         [Route("getNotes/{userId}")]
+        [Authorize]
         public (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType)
         {
             var result = this.noteManager.GetNotes(userId, noteType);
@@ -157,12 +158,13 @@ namespace FundooNoteApi.Controllers
         /// sending push notification
         /// </summary>
         /// <returns></returns>
+        
         [AllowAnonymous]
         [HttpGet]
         [Route("sendMessage")]
-        public IActionResult SendPushNotification()
-       {
-             var result =  this.noteManager.SendPushNotification();
+        public async Task<IActionResult> SendPushNotification()
+        {
+            var result = await this.noteManager.SendPushNotification();
             if (result != null)
             {
                 return Ok(new { result });
@@ -212,6 +214,14 @@ namespace FundooNoteApi.Controllers
         public IActionResult Search(string searchString)
         {
             var result = this.noteManager.Search(searchString);
+            return Ok(new { result });
+        }
+
+        [HttpDelete]
+        [Route("bulkTrash")]
+        public async Task<IActionResult> BulkTrash(IList<int> noteId)
+        {
+            var result = await this.noteManager.BulkTrash(noteId);
             return Ok(new { result });
         }
     }

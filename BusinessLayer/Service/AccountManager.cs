@@ -159,5 +159,47 @@ namespace BusinessLayer.Service
                 throw new Exception("Invalid file");
             }
         }
+
+        /// <summary>
+        /// social login
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="token"></param>
+        /// <returns>returns token</returns>
+        public async Task<string> SocialLogin(string email)
+        {
+            try
+            {
+                if (email != null)
+                {
+                    ////if email is not null it will go to the repository layer
+                    return await this.accountManagerRepository.SocialLogin(email);
+                }
+                else
+                {
+                    return "email is empty";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// logout method
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> Logout()
+        {
+            try
+            {
+                return await this.accountManagerRepository.Logout();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

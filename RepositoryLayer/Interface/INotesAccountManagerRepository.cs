@@ -75,7 +75,7 @@ namespace RepositoryLayer.Interface
         /// sending push notification
         /// </summary>
         /// <returns></returns>
-        IList<NotesModel> SendPushNotification();
+        Task<IList<NotesModel>> SendPushNotification();
 
         /// <summary>
         /// adding collaborator
@@ -97,5 +97,12 @@ namespace RepositoryLayer.Interface
         /// <param name="searchString"></param>
         /// <returns></returns>
         IList<NotesModel> Search(string searchString);
+
+        /// <summary>
+        /// bulk trash
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        Task<string> BulkTrash(IList<int> noteId);
     }
 }

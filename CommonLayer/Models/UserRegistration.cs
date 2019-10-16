@@ -8,6 +8,7 @@
 namespace CommonLayer.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
     /// user registration class
@@ -65,10 +66,26 @@ namespace CommonLayer.Models
         [Required]
         [StringLength(15, MinimumLength = 3)]
         public string UserName { get; set; }
+
         /// <summary>
         /// token
         /// </summary>
         public string Token
+        {
+            get; set;
+        }
+        /// <summary>
+        /// Role type
+        /// </summary>
+        [Required]
+        public string Role
+        {
+            get; set;
+        }
+
+        [Required]
+        [ForeignKey("ServiceModel")]
+        public int ServiceId
         {
             get; set;
         }

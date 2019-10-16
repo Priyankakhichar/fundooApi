@@ -9,6 +9,7 @@ namespace CommonLayer.Models
 {
     using CommonLayer.Enum;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -98,5 +99,9 @@ namespace CommonLayer.Models
         {
             get; set;
         }
+        //public IList<int> NoteId
+        //{
+        //    get; set;
+        //}
     }
 }

@@ -53,7 +53,8 @@ namespace RepositoryLayer.Services
                     Color = model.Color,
                     NoteType = model.NoteType,
                     CreateDate = model.CreateDate,
-                    ModifiedDate = model.ModifiedDate
+                    ModifiedDate = model.ModifiedDate,
+                    Image = model.Image
                 };
 
                 ////adding the details to the the data base
@@ -96,7 +97,7 @@ namespace RepositoryLayer.Services
         }
 
         /// <summary>
-        /// get notes from the data base according to the data base
+        /// get notes from the database according to the user id
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -118,6 +119,22 @@ namespace RepositoryLayer.Services
                 list.Add(result);
             }
 
+            ////getting noteId from Collaboration table by userId
+            var noteById = from notes in context.NotesModels
+                          join Collaboration in context.Collaborations on notes.Id equals Collaboration.NoteId
+                          where Collaboration.UserId == userId
+                          select new NotesCollaboration
+                          {
+                              NoteId = Collaboration.NoteId,
+                          };
+
+            ////to get result by every noteId
+            foreach (var noteid in noteById)
+            {
+                var notes = (from note in context.NotesModels where note.Id == noteid.NoteId select note).FirstOrDefault();
+                list.Add(notes);
+            }
+
             ////iterating the all notes to get user id for each note
             foreach (var user in results)
             {
@@ -128,7 +145,6 @@ namespace RepositoryLayer.Services
                               select new NotesCollaboration
                               {
                                   UserId = Collaboration.UserId,
-
                               };
 
                 ////iterating the result1 variable to get user details from Application user
@@ -159,7 +175,7 @@ namespace RepositoryLayer.Services
                              where notes.Id == id
                              select notes).FirstOrDefault();
 
-            ////if notes data have data then it will update the records
+            ////if notes data have records then it will update the records
             if (notesData != null)
             {
                 notesData.Title = model.Title;
@@ -174,16 +190,17 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                var users = from notes in context.NotesModels
+                ////getting the notes from notes model by notes id comparing from collaboration table 
+                var userNotes = from notes in context.NotesModels
                             join Collaboration in context.Collaborations on notes.Id equals Collaboration.NoteId
                             where Collaboration.NoteId == id
                             select notes;
 
                 ////condition to check empty list
-                if (users.ToList() != null)
+                if (userNotes.ToList() != null)
                 {
                     ////iterating the loop
-                    foreach (var user in users)
+                    foreach (var user in userNotes)
                     {
                         user.Title = model.Title;
                         user.Description = model.Description;
@@ -220,10 +237,10 @@ namespace RepositoryLayer.Services
         {
 
             ////getting the row according to the note id
-            var updatableRow = context.NotesModels.Where(u => u.Id == noteId).FirstOrDefault();
+            var user = context.NotesModels.Where(u => u.Id == noteId).FirstOrDefault();
 
             ////placing the url
-            updatableRow.Image = url;
+            user.Image = url;
             var result = this.context.SaveChanges();
             if (result != 0)
             {
@@ -244,10 +261,10 @@ namespace RepositoryLayer.Services
         public string AddReminder(int noteId, DateTime time)
         {
             ////getting the row according to the note id
-            var updatableRow = this.context.NotesModels.Where(g => g.Id == noteId).FirstOrDefault();
+            var user = this.context.NotesModels.Where(g => g.Id == noteId).FirstOrDefault();
 
             ////setting the reminder time
-            updatableRow.Reminder = time;
+            user.Reminder = time;
 
             ////saving the changes to the database
             var result = this.context.SaveChanges();
@@ -269,10 +286,10 @@ namespace RepositoryLayer.Services
         public string DeleteReminder(int noteId)
         {
             ////getting the row according to the noteid
-            var updatableRow = this.context.NotesModels.Where(u => u.Id == noteId).FirstOrDefault();
+            var user = this.context.NotesModels.Where(u => u.Id == noteId).FirstOrDefault();
 
             ////setting the reminder value null
-            updatableRow.Reminder = null;
+            user.Reminder = null;
 
             ////saving the changes to the database
             var result = this.context.SaveChanges();
@@ -290,7 +307,7 @@ namespace RepositoryLayer.Services
         /// sending push notification
         /// </summary>
         /// <returns></returns>
-        public  IList<NotesModel> SendPushNotification()
+        public async Task<IList<NotesModel>> SendPushNotification()
         {
             var data = @"
             'headers':
@@ -319,12 +336,14 @@ namespace RepositoryLayer.Services
 
 
             ////sending the get request to the firebase api
-            var api =  client.GetAsync("https://fcm.googleapis.com/fcm/send");
-            var json = JsonConvert.SerializeObject(data);
-            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var api =  await client.GetAsync("https://fcm.googleapis.com/fcm/send");
+
+            //////converting data to the string formate
+            //var json = JsonConvert.SerializeObject(data);
+            //var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
  
 
-            var messageResponse = client.PostAsync("https://fcm.googleapis.com/fcm/send", httpContent);
+            //var messageResponse = await client.PostAsync("https://fcm.googleapis.com/fcm/send", httpContent);
             ////returning the list of notes
             return result.ToList();
         }
@@ -390,10 +409,29 @@ namespace RepositoryLayer.Services
         /// <returns>returning the list of notes that have contains search string</returns>
         public IList<NotesModel> Search(string searchString)
         {
-            ////getting the record according to the title and description contains search string
+            ////getting the record according to the title and description that contains search string
             var result = from notes in this.context.NotesModels.Where(s => s.Title.Contains(searchString) || s.Description.Contains(searchString)) select notes;
             return result.ToList();
-           
+        }
+
+        public async Task<string> BulkTrash(IList<int> noteId)
+        {
+            foreach (var noteid in noteId)
+            {
+                var note =  this.context.NotesModels.Where(g => g.Id == noteid).FirstOrDefault();
+                this.context.Remove(note);
+            }
+         
+            var result = await this.context.SaveChangesAsync();
+            if(result > 0)
+            {
+                return "notes trashed successfully";
+            }
+            else
+            {
+                return "something went wrong";
+            }
+
         }
     }
 }

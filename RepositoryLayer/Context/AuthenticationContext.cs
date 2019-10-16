@@ -26,15 +26,35 @@ namespace RepositoryLayer.Context
         {
             get; set;
         }
+
+        /// <summary>
+        /// notes model
+        /// </summary>
         public DbSet<NotesModel> NotesModels
         {
             get; set;
         }
+
+        /// <summary>
+        /// label model
+        /// </summary>
         public DbSet<LabelModel> LabelModels
         {
             get; set;
         }
+
+        /// <summary>
+        /// collaboration
+        /// </summary>
         public DbSet<NotesCollaboration> Collaborations
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// service
+        /// </summary>
+        public DbSet<ServiceModel> Service
         {
             get; set;
         }

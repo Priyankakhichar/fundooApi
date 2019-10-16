@@ -71,9 +71,39 @@ namespace BusinessLayer.Interface
         /// <param name="noteId"></param>
         /// <returns></returns>
         string DeleteReminder(int noteId);
-        IList<NotesModel> SendPushNotification();
+
+        /// <summary>
+        /// sending push notififcation
+        /// </summary>
+        /// <returns></returns>
+        Task<IList<NotesModel>> SendPushNotification();
+
+        /// <summary>
+        /// adding collabration
+        /// </summary>
+        /// <param name="collaboration"></param>
+        /// <returns></returns>
         Task<string> AddCollabration(NotesCollaboration collaboration);
+
+        /// <summary>
+        /// removing collabration
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<string> RemoveCollabration(int id);
+
+        /// <summary>
+        /// search method to search notes by titile that contains search string
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <returns></returns>
         IList<NotesModel> Search(string searchString);
+
+        /// <summary>
+        /// bulk trash
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        Task<string> BulkTrash(IList<int> noteId);
     }
 }

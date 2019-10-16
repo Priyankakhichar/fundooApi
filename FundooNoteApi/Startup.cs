@@ -49,6 +49,8 @@ namespace FundooNoteApi
             services.AddTransient<INotesAccountManagerRepository, NotesAccountManagerRepository>();
             services.AddTransient<ILabelBusinessManager, LabelAccountManagerService>();
             services.AddTransient<ILabelAccountManager, LabelAccountManagerRepository>();
+            services.AddTransient<IAdminBussiness, AdminService>();
+            services.AddTransient<IAdminRepository, AdminRepository>();
 
 
             //// database connection service is registered with method extension
@@ -91,6 +93,13 @@ namespace FundooNoteApi
                      };
                 });
 
+            ////In this code section we are reading App ID and App Secret from secrets.json file for the authentication purpose
+            services.AddAuthentication().AddFacebook(facbookOptions =>
+            {
+                facbookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                facbookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyFandooApp", Version = "v1", Description = "Fandoo App" });
@@ -115,10 +124,11 @@ namespace FundooNoteApi
                 app.UseHsts();
             }
 
+            //// // global cors policy
             app.UseCors(builder =>
             builder.WithOrigins(Configuration["ApplicationSettings:Client_Url"].ToString()).AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
-            app.UseAuthentication();
+           
 
             app.UseSwagger();
             app.UseSwaggerUI(options =>

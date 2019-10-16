@@ -46,5 +46,19 @@ namespace RepositoryLayer.Interface
         /// <param name="userId"></param>
         /// <returns></returns>
         string UploadImage(string url, string userId);
+
+        /// <summary>
+        /// social login
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="token"></param>
+        /// <returns>returns token</returns>
+        Task<string> SocialLogin(string email);
+
+        /// <summary>
+        /// logout
+        /// </summary>
+        /// <returns></returns>
+        Task<string> Logout();
     }
 }
