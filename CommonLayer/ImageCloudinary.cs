@@ -10,6 +10,7 @@ namespace CommonLayer
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
     using Microsoft.AspNetCore.Http;
+
     /// <summary>
     /// Image cloudinary class
     /// </summary>

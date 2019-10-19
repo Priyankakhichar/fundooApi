@@ -14,12 +14,15 @@ namespace XUnitTestCases.NotesTestCases
     using Xunit;
     using Moq;
     using System.Collections.Generic;
+    using RepositoryLayer.Services;
+    using RepositoryLayer.Context;
 
     public class NotesTest
     {
         /// <summary>
         /// create notes unit test
         /// </summary>
+       
         [Fact]
         public void CreateNotesTest()
         {
@@ -115,5 +118,45 @@ namespace XUnitTestCases.NotesTestCases
             Assert.NotNull(result);
         }
 
+        /// <summary>
+        /// add collabration not null test case
+        /// </summary>
+        [Fact]
+        public void AddCollabrationNotNull()
+        {
+            var notesData = new Mock<INotesAccountManagerRepository>();
+            var notes = new NotesAccountManagerService(notesData.Object);
+            var collaborations = new NotesCollaboration()
+            {
+                NoteId = 1,
+                UserId = "userId",
+                CreatedBy = "createdBy"
+            };
+
+            var result = notes.AddCollabration(collaborations);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void BulkTrashService()
+        {
+            var notesData = new Mock<INotesAccountManagerRepository>();
+            var notes = new NotesAccountManagerService(notesData.Object);
+            IList<int> list = new List<int>();
+            object result = await notes.BulkTrash(list);
+            Assert.Equal("list is empty", result);
+        }
+
+        [Fact]
+        public async void BulkTrashRepository()
+        {
+            var notesData = new Mock<INotesAccountManagerRepository>();
+            var notes = new NotesAccountManagerService(notesData.Object);
+            IList<int> list = new List<int>();
+            list.Add(2);
+            list.Add(3);
+            object result = await notes.BulkTrash(list);
+            Assert.Equal("notes trashed successfully", result);
+        }
     }
 }

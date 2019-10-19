@@ -167,14 +167,6 @@ namespace RepositoryLayer.Services
                     ////it writes security token to the token variable.
                     var token = tokenHandler.WriteToken(securityToken);
                     msmq.SendEmailToQueue(model.EmailId, token);
-                   
-
-                    ////////generated token
-                    //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-                    ////sending the mail to queue
-                    //    msmq.SendEmailToQueue(model.EmailId, code);
-                    //return code;
                 
                 return token;
             }
@@ -249,7 +241,7 @@ namespace RepositoryLayer.Services
         }
 
         /// <summary>
-        /// 
+        /// Social Login method
         /// </summary>
         /// <param name="email"></param>
         /// <param name="token"></param>
@@ -283,6 +275,10 @@ namespace RepositoryLayer.Services
             }
         }
 
+        /// <summary>
+        /// log out method
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> Logout()
         {
              await this._signInManager.SignOutAsync();

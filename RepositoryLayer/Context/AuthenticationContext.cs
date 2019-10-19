@@ -15,7 +15,7 @@ namespace RepositoryLayer.Context
     /// </summary>
     public class AuthenticationContext : IdentityDbContext
     {
-        public AuthenticationContext(DbContextOptions options) : base(options)
+        public AuthenticationContext(DbContextOptions options, object options1) : base(options)
         {
 
         }

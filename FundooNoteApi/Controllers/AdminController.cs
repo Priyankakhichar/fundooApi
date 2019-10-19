@@ -1,26 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BusinessLayer.Interface;
-using CommonLayer.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "AdminController.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace FundooNoteApi.Controllers
 {
+    using System.Threading.Tasks;
+    using BusinessLayer.Interface;
+    using CommonLayer.Models;
+    using Microsoft.AspNetCore.Mvc;
+
+    /// <summary>
+    /// admin controller
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
     {
+        /// <summary>
+        /// admin bussiness variable
+        /// </summary>
         private IAdminBussiness _admin;
+
+        /// <summary>
+        /// admin bussiness variable is initilized through constructor
+        /// </summary>
+        /// <param name="admin"></param>
         public AdminController(IAdminBussiness admin)
         {
             this._admin = admin;
         }
 
+        /// <summary>
+        /// register the  admin user
+        /// </summary>
+        /// <param name="registration"></param>
+        /// <returns></returns>
+        
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> RegisterUser(UserRegistration registration)
@@ -29,6 +47,12 @@ namespace FundooNoteApi.Controllers
             return Ok(new { result });
         }
 
+        /// <summary>
+        /// admin login api
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        
         [HttpPost]
         [Route("adminLogin")]
         public async Task<IActionResult> AdminLogin(LoginModel model)
@@ -37,6 +61,12 @@ namespace FundooNoteApi.Controllers
             return Ok(new { result });
         }
 
+        /// <summary>
+        /// add service api
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        
         [HttpPost]
         [Route("addService")]
         public async Task<IActionResult> AddService(ServiceModel model)
@@ -45,11 +75,17 @@ namespace FundooNoteApi.Controllers
             return Ok(new { result });
         }
 
+        /// <summary>
+        /// get user list api for admin
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        
         [HttpGet]
         [Route("getUserList")]
-        public (IList<ApplicationUser>, IList<ApplicationUser>) GetUserList(string token)
+        public async Task<UserStatisticsModel> GetUserList(string token)
         {
-            var result = this._admin.GetUserList(token);
+            var result = await this._admin.GetUserList(token);
             return result;
         }
     }

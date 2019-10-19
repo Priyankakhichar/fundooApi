@@ -299,7 +299,7 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                return "somthing went wrong";
+                return "something went wrong";
             }
         }
 
@@ -416,20 +416,23 @@ namespace RepositoryLayer.Services
 
         public async Task<string> BulkTrash(IList<int> noteId)
         {
+            ////iterating the noteId from list
             foreach (var noteid in noteId)
             {
+                ////getting notes by id
                 var note =  this.context.NotesModels.Where(g => g.Id == noteid).FirstOrDefault();
                 this.context.Remove(note);
             }
-         
+
+            ////saving the changes to the database
             var result = await this.context.SaveChangesAsync();
             if(result > 0)
             {
-                return "notes trashed successfully";
+                return "Notes trashed successfully";
             }
             else
             {
-                return "something went wrong";
+                return "Something went wrong";
             }
 
         }

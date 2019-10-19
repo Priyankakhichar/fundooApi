@@ -283,7 +283,7 @@ namespace BusinessLayer.Service
                 else
                 {
                     ////if search string is empty it will throw the exception
-                    throw new Exception("empty string");
+                    throw new Exception("Empty string");
                 }
             }
             catch(Exception ex)
@@ -292,14 +292,20 @@ namespace BusinessLayer.Service
             }
        }
 
+        /// <summary>
+        /// Bulk trash to delete the notes
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <returns></returns>
         public async Task<string> BulkTrash(IList<int> noteId)
         {
-
-            if (noteId != null)
+            ////if list is not empty
+            if (noteId.Count > 0)
             {
                 try
                 {
-                    return await this.accountRepository.BulkTrash(noteId);
+                   var result = await this.accountRepository.BulkTrash(noteId);
+                    return result;
                 }
                 catch (Exception ex)
                 {
@@ -308,7 +314,7 @@ namespace BusinessLayer.Service
             }
             else
             {
-                return "list is empty";
+                return "List is empty";
             }   
         }
     }

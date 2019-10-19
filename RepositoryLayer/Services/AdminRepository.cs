@@ -1,25 +1,57 @@
-﻿using CommonLayer.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using RepositoryLayer.Context;
-using RepositoryLayer.Interface;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "AdminRepository.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace RepositoryLayer.Services
 {
+    using CommonLayer.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.Options;
+    using Microsoft.IdentityModel.Tokens;
+    using RepositoryLayer.Context;
+    using RepositoryLayer.Interface;
+    using System;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// admin repository class
+    /// </summary>
     public class AdminRepository : IAdminRepository
     {
+        /// <summary>
+        /// authenticatioinContext variable
+        /// </summary>
         private AuthenticationContext context;
+
+        /// <summary>
+        /// UserManager varaible
+        /// </summary>
         private UserManager<ApplicationUser> _userManager;
+
+        /// <summary>
+        /// Siginin Manager type variable
+        /// </summary>
         private SignInManager<ApplicationUser> _signInManager;
+
+        /// <summary>
+        /// app settings variable
+        /// </summary>
         private readonly ApplicationSettings _appSettings;
+
+        /// <summary>
+        /// variables are initilized through constructor
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="userManager"></param>
+        /// <param name="signInManager"></param>
+        /// <param name="appSettings"></param>
         public AdminRepository(AuthenticationContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings)
         {
             this.context = context;
@@ -28,8 +60,14 @@ namespace RepositoryLayer.Services
             this._appSettings = appSettings.Value;
         }
 
+        /// <summary>
+        /// register user method to register the admin user
+        /// </summary>
+        /// <param name="registration"></param>
+        /// <returns></returns>
         public async Task<string> RegisterUser(UserRegistration registration)
         {
+            ////applicationUser model class to hold the entities value
             ApplicationUser applicationUser = new ApplicationUser()
             {
                 FirstName = registration.FirstName,
@@ -49,15 +87,20 @@ namespace RepositoryLayer.Services
                 }
                 else
                 {
-                    return "somthing went wrong";
+                    return "something went wrong";
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception(ex.Message);
             }
         }
     
+        /// <summary>
+        /// admin login method for admin login
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<string> AdminLogin(LoginModel model)
         {
             ////if user is exist it will return some result
@@ -74,14 +117,18 @@ namespace RepositoryLayer.Services
                     {
                         Subject = new ClaimsIdentity(new Claim[]
                         {
+                            ////setting the user claims
                             new Claim("email", user.Email.ToString())
                         }),
+                        ////token expire validation
                         Expires = DateTime.UtcNow.AddDays(1),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
                     };
                     var tokenHandler = new JwtSecurityTokenHandler();
 
                     var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+
+                    ////generating the token
                     var token = tokenHandler.WriteToken(securityToken);
                     return token;
                 }
@@ -96,8 +143,14 @@ namespace RepositoryLayer.Services
             }
         }
 
+        /// <summary>
+        /// add service method to add the service to the service class
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<string> AddService(ServiceModel model)
         {
+            ////service model class to hold the values of entities
             ServiceModel service = new ServiceModel()
             {
                 Id = model.Id,
@@ -107,7 +160,10 @@ namespace RepositoryLayer.Services
                 CreatedDate = model.CreatedDate
             };
 
+            ////adding the details to the database
             this.context.Add(service);
+
+            ////saving the changes
             var result = await this.context.SaveChangesAsync();
             if(result > 0)
             {
@@ -115,39 +171,48 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                return "somthing went wrong";
+                return "something went wrong";
             }
         }
         
-        public (IList<ApplicationUser>, IList<ApplicationUser>) GetUserList(string tokenString)
+        /// <summary>
+        /// get user list to get all user to the admin
+        /// </summary>
+        /// <param name="tokenString"></param>
+        /// <returns></returns>
+        public async Task<UserStatisticsModel> GetUserList(string tokenString)
         {
+            ////decrpting the token
             var token = new JwtSecurityToken(jwtEncodedString: tokenString);
 
+            ////getting the email id from token
             var email = token.Claims.First(c => c.Type == "email").Value;
 
-            var user =  this._userManager.FindByEmailAsync(email);
-            IList<ApplicationUser> adminList = new List<ApplicationUser>();
-            IList<ApplicationUser> userList = new List<ApplicationUser>();
+            ////varifiyng the user by mail id
+            var user = await this._userManager.FindByEmailAsync(email);
 
-            if(user != null)
+            var result = this.context.ApplicationUser.Where(g => g.Role == "admin" && g.Email == email).FirstOrDefault();
+
+            UserStatisticsModel userStatisticsModel = new UserStatisticsModel();
+            if (result != null)
             {
+                ////getting the list of basic user
                 var adminUsers = this.context.ApplicationUser.Where(g => g.ServiceId == 1);
-                foreach(var admin in adminUsers)
-                {
-                    adminList.Add(admin);
-                }
 
+                ////count of basic users
+                userStatisticsModel.BasicUserCount = adminUsers.Count();
+            
+                ////getting the list of advance user
                 var normalUser = this.context.ApplicationUser.Where(g => g.ServiceId == 2);
-                foreach(var list in normalUser)
-                {
-                    userList.Add(list);
-                }
 
-                return (adminList, userList); 
+                ////count of advance users
+                userStatisticsModel.AdvanceUserCount = normalUser.Count();
+
+                return userStatisticsModel;
             }
             else
             {
-                throw new Exception("only admin can access this service");
+                throw new Exception("Only admin can access this service");
             }
         }
     }

@@ -1,11 +1,18 @@
-﻿using CommonLayer.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "AdminRepository.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace RepositoryLayer.Interface
 {
+    using CommonLayer.Models;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// admin repository interface
+    /// </summary>
     public interface IAdminRepository
     {
         /// <summary>
@@ -28,6 +35,12 @@ namespace RepositoryLayer.Interface
         /// <param name="model"></param>
         /// <returns></returns>
         Task<string> AddService(ServiceModel model);
-        (IList<ApplicationUser>, IList<ApplicationUser>) GetUserList(string token);
+
+        /// <summary>
+        /// get all user
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        Task<UserStatisticsModel> GetUserList(string token);
     }
 }
