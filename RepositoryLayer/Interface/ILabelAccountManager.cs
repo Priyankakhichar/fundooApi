@@ -44,5 +44,12 @@ namespace RepositoryLayer.Interface
         /// <param name="userId"></param>
         /// <returns></returns>
         IList<LabelModel> GetLabel(string userId);
+
+        /// <summary>
+        /// addding label to notes
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<bool> AddLabelToNote(int labelId, int noteId);
     }
 }

@@ -26,13 +26,16 @@ namespace RepositoryLayer.Services
         /// </summary>
         private AuthenticationContext context;
 
+        private ILabelAccountManager _labelRepository;
+     
         /// <summary>
         /// constructor to initialize the context variable 
         /// </summary>
         /// <param name="context"></param>
-        public NotesAccountManagerRepository(AuthenticationContext context)
+        public NotesAccountManagerRepository(AuthenticationContext context, ILabelAccountManager labelRepository)
         {
             this.context = context;
+            this._labelRepository = labelRepository;
         }
 
         /// <summary>
@@ -170,6 +173,7 @@ namespace RepositoryLayer.Services
         /// <returns></returns>
         public async Task<bool> UpdatesNotes(NotesModel model, int id)
         {
+
             ////getting the records by id
             var notesData = (from notes in context.NotesModels
                              where notes.Id == id
@@ -178,23 +182,44 @@ namespace RepositoryLayer.Services
             ////if notes data have records then it will update the records
             if (notesData != null)
             {
-                notesData.Title = model.Title;
-                notesData.Description = model.Description;
-                notesData.UserId = model.UserId;
-                notesData.Color = model.Color;
-                notesData.NoteType = model.NoteType;
-                notesData.IsPin = model.IsPin;
-                notesData.Image = model.Image;
-                notesData.CreateDate = model.CreateDate;
+                if (model.Title != "string")
+                {
+                    notesData.Title = model.Title;
+                }
+                if (model.Description != "string")
+                {
+                    notesData.Description = model.Description;
+                }
+                if (model.UserId != "string")
+                {
+                    notesData.UserId = model.UserId;
+                }
+                if (model.Color != "string")
+                {
+                    notesData.Color = model.Color;
+                }
+                if (model.NoteType != 0)
+                {
+                    notesData.NoteType = model.NoteType;
+                }
+                if (model.IsPin != false)
+                {
+                    notesData.IsPin = model.IsPin;
+                }
+                if (model.Image != "string")
+                {
+                    notesData.Image = model.Image;
+                }
                 notesData.ModifiedDate = DateTime.Now;
+               
             }
             else
             {
                 ////getting the notes from notes model by notes id comparing from collaboration table 
                 var userNotes = from notes in context.NotesModels
-                            join Collaboration in context.Collaborations on notes.Id equals Collaboration.NoteId
-                            where Collaboration.NoteId == id
-                            select notes;
+                                join Collaboration in context.Collaborations on notes.Id equals Collaboration.NoteId
+                                where Collaboration.NoteId == id
+                                select notes;
 
                 ////condition to check empty list
                 if (userNotes.ToList() != null)
@@ -214,9 +239,41 @@ namespace RepositoryLayer.Services
                     }
                 }
             }
-
             ////save changes to the database
             var result = await this.context.SaveChangesAsync();
+
+            if (model.labelId != null)
+            {
+                foreach (var labelid in model.labelId)
+                {
+                    ////verifiyng if the label is exist or not
+                    var label = this.context.LabelModels.Where(g => g.Id == labelid.Id).FirstOrDefault();
+                    if(label != null)
+                    {
+                        ////calling add Label api to add the label to a perticular note
+                        bool labelResult = await this._labelRepository.AddLabelToNote(labelid.Id, id);
+                    }
+                    else
+                    {
+                        ////adding parameters to the notes model entity class
+                        var labelModel = new LabelModel()
+                        {
+                            UserId = model.UserId,
+                            LableName = labelid.LableName,
+                            CreatedDate = labelid.CreatedDate,
+                            ModifiedDate = labelid.ModifiedDate
+                        };
+
+                        ////adding model to the data base
+                        this.context.Add(labelModel);
+
+                        ////adding the label to perticular note id
+                        bool addLabelToNote = await this._labelRepository.AddLabelToNote(labelid.Id, id);
+                    }
+                }
+               
+            }
+
             if (result > 0)
             {
                 return true;

@@ -31,9 +31,13 @@ namespace RepositoryLayer.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
+                    b.Property<int?>("NotesModelId");
+
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NotesModelId");
 
                     b.ToTable("LabelModels");
                 });
@@ -53,6 +57,23 @@ namespace RepositoryLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Collaborations");
+                });
+
+            modelBuilder.Entity("CommonLayer.Models.NotesLabel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("LabelId");
+
+                    b.Property<int>("NoteId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NotesLabel");
                 });
 
             modelBuilder.Entity("CommonLayer.Models.NotesModel", b =>
@@ -300,6 +321,13 @@ namespace RepositoryLayer.Migrations
                     b.ToTable("ApplicationUser");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("CommonLayer.Models.LabelModel", b =>
+                {
+                    b.HasOne("CommonLayer.Models.NotesModel")
+                        .WithMany("labelId")
+                        .HasForeignKey("NotesModelId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

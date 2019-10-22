@@ -169,5 +169,29 @@ namespace BusinessLayer.Service
                 throw new Exception(ex.Message);
             }
         }
+
+        /// <summary>
+        /// add label to notes
+        /// </summary>
+        /// <param name="idList"></param>
+        /// <returns></returns>
+        public async Task<bool> AddLabelToNote(int labelId, int noteId)
+        {
+            try
+            {
+                if (labelId != null)
+                {
+                    return await this.accountRepository.AddLabelToNote(labelId, noteId);
+                }
+                else
+                {
+                    throw new Exception("list is empty");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

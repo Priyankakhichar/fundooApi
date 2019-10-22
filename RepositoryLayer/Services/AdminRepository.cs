@@ -191,7 +191,7 @@ namespace RepositoryLayer.Services
             ////varifiyng the user by mail id
             var user = await this._userManager.FindByEmailAsync(email);
 
-            var result = this.context.ApplicationUser.Where(g => g.Role == "admin" && g.Email == email).FirstOrDefault();
+            var result =  this.context.ApplicationUser.Where(g => g.Role == "admin" && g.Email == email).FirstOrDefault();
 
             UserStatisticsModel userStatisticsModel = new UserStatisticsModel();
             if (result != null)

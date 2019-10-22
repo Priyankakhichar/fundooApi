@@ -40,7 +40,7 @@ namespace BusinessLayer.Interface
         /// <param name="model"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<bool> UpdateNotes(NotesModel model, int id);
+        Task<bool> UpdatesNotes(NotesModel model, int id);
 
         /// <summary>
         /// method to get notes

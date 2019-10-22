@@ -11,9 +11,11 @@ using CommonLayer.Models;
 using RepositoryLayer.Context;
 using RepositoryLayer.Interface;
 using BusinessLayer.Service;
+using NUnit.Framework;
 
 namespace XUnitTestCases.NotesTestCases
 {
+    [TestFixture]
     public class NotesTestCases
     {
         private INotesAccountManagerRepository repository;
@@ -62,15 +64,15 @@ namespace XUnitTestCases.NotesTestCases
         //}
 
 
-        [Fact]
-        public void GetNotes()
-        {
-            var notes = this.repository.GetNotes("f949c013-dade-4cf2-8aaa-3a47ea80f739", 0);
-            var count = notes.Item1.Count();
-            Assert.Equal(4, count);
+        //[Fact]
+        //public void GetNotes()
+        //{
+        //    var notes = this.repository.GetNotes("f949c013-dade-4cf2-8aaa-3a47ea80f739", 0);
+        //    var count = notes.Item1.Count();
+        //    NUnit.Framework.Assert.Equals(4, count);
            
            
-        }
+        //}
 
        
     }

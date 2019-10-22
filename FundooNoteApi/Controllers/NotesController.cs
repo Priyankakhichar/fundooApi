@@ -59,12 +59,12 @@ namespace FundooNoteApi.Controllers
         /// <param name="model"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        
+
         [HttpPut]
-        [Route("updateNotes/{id}")]
-        public async Task<bool> UpdateNotes(NotesModel model, int id)
+        [Route("updateNotes")]
+        public async Task<bool> UpdatesNotes(NotesModel model, int id )
         {
-            var result = await this.noteManager.UpdateNotes(model, id);
+            var result = await this.noteManager.UpdatesNotes(model, id);
             return result;
         }
 
@@ -73,7 +73,7 @@ namespace FundooNoteApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        
+
         [HttpDelete]
         [Route("deleteNotes/{id}")]
         public async Task<IActionResult> DeleteNotes(int id)
@@ -217,6 +217,11 @@ namespace FundooNoteApi.Controllers
             return Ok(new { result });
         }
 
+        /// <summary>
+        /// bulk trash method to delete many notes
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("bulkTrash")]
         public async Task<IActionResult> BulkTrash(IList<int> noteId)

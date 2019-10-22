@@ -137,5 +137,27 @@ namespace RepositoryLayer.Services
                 return "id is not availabel";
             }
         }
+
+        public async Task<bool> AddLabelToNote(int labelId, int noteId)
+        {
+           
+                NotesLabel notesLabel = new NotesLabel()
+                {
+                    NoteId = noteId,
+                    LabelId = labelId
+                };
+
+                this.context.Add(notesLabel);
+            
+            var result = await this.context.SaveChangesAsync();
+            if (result > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

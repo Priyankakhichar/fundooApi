@@ -84,7 +84,7 @@ namespace BusinessLayer.Service
         /// <param name="model"></param>
         /// <param name="id"></param>
         /// <returns>returns true if record updated successfully</returns>
-        public async Task<bool> UpdateNotes(NotesModel model, int id)
+        public async Task<bool> UpdatesNotes(NotesModel model, int id)
         {
             try
             {

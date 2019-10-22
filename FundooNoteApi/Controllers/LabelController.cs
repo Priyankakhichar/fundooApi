@@ -118,5 +118,17 @@ namespace FundooNoteApi.Controllers
             }
         }
 
+        /// <summary>
+        /// adding label to notes
+        /// </summary>
+        /// <param name="idList"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("addLabelToNote")]
+        public async Task<IActionResult> AddLabelToNote(int labelId, int noteId)
+        {
+            var result = await this.labelBusinessManager.AddLabelToNote(labelId, noteId);
+            return Ok(new { result });
+        }
     }
 }

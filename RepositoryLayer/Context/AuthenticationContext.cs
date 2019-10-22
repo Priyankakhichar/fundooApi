@@ -15,7 +15,7 @@ namespace RepositoryLayer.Context
     /// </summary>
     public class AuthenticationContext : IdentityDbContext
     {
-        public AuthenticationContext(DbContextOptions options, object options1) : base(options)
+        public AuthenticationContext(DbContextOptions options) : base(options)
         {
 
         }
@@ -55,6 +55,14 @@ namespace RepositoryLayer.Context
         /// service
         /// </summary>
         public DbSet<ServiceModel> Service
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Notes Labels tabel
+        /// </summary>
+        public DbSet<NotesLabel> NotesLabel
         {
             get; set;
         }
