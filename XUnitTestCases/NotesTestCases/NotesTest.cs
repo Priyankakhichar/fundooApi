@@ -16,6 +16,9 @@ namespace XUnitTestCases.NotesTestCases
     using System.Collections.Generic;
     using RepositoryLayer.Services;
     using RepositoryLayer.Context;
+ 
+    using BusinessLayer.Interface;
+    using System.Threading.Tasks;
 
     public class NotesTest
     {
@@ -147,16 +150,19 @@ namespace XUnitTestCases.NotesTestCases
             Assert.Equal("List is empty", result);
         }
 
-        //[Fact]
-        //public async void BulkTrashRepository()
-        //{
-        //    var notesData = new Mock<INotesAccountManagerRepository>();
-        //    var notes = new NotesAccountManagerService(notesData.Object);
-        //    IList<int> list = new List<int>();
-        //    list.Add(2);
-        //    list.Add(3);
-        //    object result = await notes.BulkTrash(list);
-        //    Assert.Equal("notes trashed successfully", result);
-        //}
+        [Fact]
+        public async void BulkTrashRepository()
+        {
+            var notesData = new Mock<INotesAccountManagerRepository>();
+            var notes = new NotesAccountManagerService(notesData.Object);
+            IList<int> list = new List<int>();
+            list.Add(2);
+            list.Add(3);
+            object result = await notes.BulkTrash(list);
+            Assert.Equal("notes trashed successfully", result);
+        }
+
+        
+       
     }
 }

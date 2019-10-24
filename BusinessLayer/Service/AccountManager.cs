@@ -26,8 +26,6 @@ namespace BusinessLayer.Service
         /// AccountManager Repository instance created
         /// </summary>
         private IAccountManagerRepository accountManagerRepository;
-        //
-        private string lastLogin;
 
         /// <summary>
         /// Constructor

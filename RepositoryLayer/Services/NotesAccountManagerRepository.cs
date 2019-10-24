@@ -27,7 +27,7 @@ namespace RepositoryLayer.Services
         private AuthenticationContext context;
 
         private ILabelAccountManager _labelRepository;
-     
+
         /// <summary>
         /// constructor to initialize the context variable 
         /// </summary>
@@ -142,7 +142,7 @@ namespace RepositoryLayer.Services
             foreach (var user in results)
             {
                 ////getting the user id according to the note id
-                var result1 = from notes in context.NotesModels
+                var userIdForNoteId = from notes in context.NotesModels
                               join Collaboration in context.Collaborations on notes.Id equals Collaboration.NoteId
                               where Collaboration.NoteId == user.Id
                               select new NotesCollaboration
@@ -151,7 +151,7 @@ namespace RepositoryLayer.Services
                               };
 
                 ////iterating the result1 variable to get user details from Application user
-                foreach (var res in result1)
+                foreach (var res in userIdForNoteId)
                 {
                     var result = from userModel in context.ApplicationUser where userModel.Id == res.UserId select userModel;
                     foreach (var res1 in result)
@@ -251,7 +251,7 @@ namespace RepositoryLayer.Services
                     if(label != null)
                     {
                         ////calling add Label api to add the label to a perticular note
-                        bool labelResult = await this._labelRepository.AddLabelToNote(labelid.Id, id);
+                        bool labelResult = await this._labelRepository.AddLabelToNote(labelid.Id, id, model.UserId);
                     }
                     else
                     {
@@ -268,7 +268,7 @@ namespace RepositoryLayer.Services
                         this.context.Add(labelModel);
 
                         ////adding the label to perticular note id
-                        bool addLabelToNote = await this._labelRepository.AddLabelToNote(labelid.Id, id);
+                        bool addLabelToNote = await this._labelRepository.AddLabelToNote(labelid.Id, id, model.UserId);
                     }
                 }
                

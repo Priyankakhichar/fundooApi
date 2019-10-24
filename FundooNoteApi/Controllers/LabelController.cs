@@ -125,9 +125,9 @@ namespace FundooNoteApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("addLabelToNote")]
-        public async Task<IActionResult> AddLabelToNote(int labelId, int noteId)
+        public async Task<IActionResult> AddLabelToNote(int labelId, int noteId, string userId)
         {
-            var result = await this.labelBusinessManager.AddLabelToNote(labelId, noteId);
+            var result = await this.labelBusinessManager.AddLabelToNote(labelId, noteId, userId);
             return Ok(new { result });
         }
     }

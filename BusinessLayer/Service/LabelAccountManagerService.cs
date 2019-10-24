@@ -175,13 +175,13 @@ namespace BusinessLayer.Service
         /// </summary>
         /// <param name="idList"></param>
         /// <returns></returns>
-        public async Task<bool> AddLabelToNote(int labelId, int noteId)
+        public async Task<bool> AddLabelToNote(int labelId, int noteId, string userId)
         {
             try
             {
                 if (labelId != null)
                 {
-                    return await this.accountRepository.AddLabelToNote(labelId, noteId);
+                    return await this.accountRepository.AddLabelToNote(labelId, noteId, userId);
                 }
                 else
                 {

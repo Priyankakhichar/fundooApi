@@ -138,24 +138,40 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public async Task<bool> AddLabelToNote(int labelId, int noteId)
+        public async Task<bool> AddLabelToNote(int labelId, int noteId, string userId)
         {
-           
+            ////verifying if the details already exist or not
+            var notelabel = this.context.NotesLabel.Where(g => g.LabelId == labelId && g.NoteId == noteId && g.UserId == userId).FirstOrDefault();
+
+            ////if notelabel does not have any record it will allow to add record in NotesLabel tabel
+            if (notelabel == null)
+            {
                 NotesLabel notesLabel = new NotesLabel()
                 {
                     NoteId = noteId,
-                    LabelId = labelId
+                    LabelId = labelId,
+                    UserId = userId
                 };
 
+                ////adding records to the NotesLabel tabel
                 this.context.Add(notesLabel);
-            
-            var result = await this.context.SaveChangesAsync();
-            if (result > 0)
-            {
-                return true;
+
+                ////saving the changes to the database
+                var result = await this.context.SaveChangesAsync();
+
+                ////if any changes made in database then result will have row count
+                if (result > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
+                ////if tabel already have same record it will return false. it avoids the duplicate records.
                 return false;
             }
         }

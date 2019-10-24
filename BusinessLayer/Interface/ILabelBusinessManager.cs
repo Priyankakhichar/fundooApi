@@ -50,6 +50,6 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-      Task<bool> AddLabelToNote(int labelId, int noteId);
+      Task<bool> AddLabelToNote(int labelId, int noteId, string userId);
     }
 }
