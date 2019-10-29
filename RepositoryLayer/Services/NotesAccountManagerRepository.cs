@@ -171,34 +171,34 @@ namespace RepositoryLayer.Services
         /// <param name="model"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> UpdatesNotes(NotesModel model, int id)
+        public async Task<bool> UpdatesNotes(NotesModel model, int noteId)
         {
 
             ////getting the records by id
             var notesData = (from notes in context.NotesModels
-                             where notes.Id == id
+                             where notes.Id == noteId
                              select notes).FirstOrDefault();
 
             ////if notes data have records then it will update the records
             if (notesData != null)
             {
-                if (model.Title != "string")
+                if (model.Title != "string" || model.Title != null)
                 {
                     notesData.Title = model.Title;
                 }
-                if (model.Description != "string")
+                if (model.Description != "string" || model.Description != null)
                 {
                     notesData.Description = model.Description;
                 }
-                if (model.UserId != "string")
+                if (model.UserId != "string" || model.UserId != null)
                 {
                     notesData.UserId = model.UserId;
                 }
-                if (model.Color != "string")
+                if (model.Color != "string" || model.Color != null)
                 {
                     notesData.Color = model.Color;
                 }
-                if (model.NoteType != 0)
+                if (model.NoteType != 0 || !model.Equals(null))
                 {
                     notesData.NoteType = model.NoteType;
                 }
@@ -206,7 +206,7 @@ namespace RepositoryLayer.Services
                 {
                     notesData.IsPin = model.IsPin;
                 }
-                if (model.Image != "string")
+                if (model.Image != "string" || model.Image != null)
                 {
                     notesData.Image = model.Image;
                 }
@@ -218,7 +218,7 @@ namespace RepositoryLayer.Services
                 ////getting the notes from notes model by notes id comparing from collaboration table 
                 var userNotes = from notes in context.NotesModels
                                 join Collaboration in context.Collaborations on notes.Id equals Collaboration.NoteId
-                                where Collaboration.NoteId == id
+                                where Collaboration.NoteId == noteId
                                 select notes;
 
                 ////condition to check empty list
@@ -251,7 +251,7 @@ namespace RepositoryLayer.Services
                     if(label != null)
                     {
                         ////calling add Label api to add the label to a perticular note
-                        bool labelResult = await this._labelRepository.AddLabelToNote(labelid.Id, id, model.UserId);
+                        bool labelResult = await this._labelRepository.AddLabelToNote(labelid.Id, noteId, model.UserId);
                     }
                     else
                     {
@@ -268,7 +268,7 @@ namespace RepositoryLayer.Services
                         this.context.Add(labelModel);
 
                         ////adding the label to perticular note id
-                        bool addLabelToNote = await this._labelRepository.AddLabelToNote(labelid.Id, id, model.UserId);
+                        bool addLabelToNote = await this._labelRepository.AddLabelToNote(labelid.Id, noteId, model.UserId);
                     }
                 }
                
