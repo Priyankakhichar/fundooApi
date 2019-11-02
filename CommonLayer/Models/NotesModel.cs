@@ -100,7 +100,7 @@ namespace CommonLayer.Models
             get; set;
         }
 
-        public IList<LabelModel> labelId { get; set; }
+        public IList<LabelModel> labelIdList { get; set; }
 
         //public IList<int> NoteId
         //{

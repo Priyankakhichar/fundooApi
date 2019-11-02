@@ -27,6 +27,10 @@ namespace CommonLayer.Models
             get; set;
         }
 
+        public int Id
+        {
+            get; set;
+        }
         /// <summary>
         /// last name
         /// </summary>

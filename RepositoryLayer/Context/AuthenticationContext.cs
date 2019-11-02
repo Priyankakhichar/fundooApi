@@ -10,6 +10,7 @@ namespace RepositoryLayer.Context
     using CommonLayer.Models;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    
     /// <summary>
     /// AuthenticationContext
     /// </summary>

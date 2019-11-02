@@ -51,6 +51,8 @@ namespace FundooNoteApi
             services.AddTransient<ILabelAccountManager, LabelAccountManagerRepository>();
             services.AddTransient<IAdminBussiness, AdminService>();
             services.AddTransient<IAdminRepository, AdminRepository>();
+            services.AddTransient<IAdminSpBusiness, AdminSpService>();
+            services.AddTransient<IAdminSpRepository, AdminSpRepository>();
 
 
             //// database connection service is registered with method extension

@@ -242,9 +242,9 @@ namespace RepositoryLayer.Services
             ////save changes to the database
             var result = await this.context.SaveChangesAsync();
 
-            if (model.labelId != null)
+            if (model.labelIdList != null)
             {
-                foreach (var labelid in model.labelId)
+                foreach (var labelid in model.labelIdList)
                 {
                     ////verifiyng if the label is exist or not
                     var label = this.context.LabelModels.Where(g => g.Id == labelid.Id).FirstOrDefault();

@@ -1,7 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿////-------------------------------------------------------------------------------------------------------------------------------
+////<copyright file = "EnumNoteType.cs" company ="Bridgelabz">
+////Copyright © 2019 company ="Bridgelabz"
+////</copyright>
+////<creator name ="Priyanka khichar"/>
+////
+////-------------------------------------------------------------------------------------------------------------------------------
 namespace CommonLayer.Enum
 {
         public enum EnumNoteType

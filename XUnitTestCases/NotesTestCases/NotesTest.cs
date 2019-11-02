@@ -14,11 +14,6 @@ namespace XUnitTestCases.NotesTestCases
     using Xunit;
     using Moq;
     using System.Collections.Generic;
-    using RepositoryLayer.Services;
-    using RepositoryLayer.Context;
- 
-    using BusinessLayer.Interface;
-    using System.Threading.Tasks;
 
     public class NotesTest
     {

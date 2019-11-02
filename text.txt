@@ -1,0 +1,185 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+
+}
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script> 
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="~/js/HomeController.js"></script>
+</head>
+
+<body>
+    <div ng-app="MyApp" ng-controller="HomeController">
+
+
+
+        <div class="container">
+            <h2>Employee Details</h2>
+
+            <div>
+                Search: <input type="text" ng-model="EmployeeModel.search"
+                               placeholder="Enter Emp id to search" />
+                <button type="button" value="Submit" ng-click="GetById(EmployeeModel)">Search</button>
+                <div ng-repeat="emp in SearchedEmployee">
+<!---------------------------------table for searched employee according to id------------------------------------>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">EmpId</th>
+                                <th scope="col">FirstName</th>
+                                <th scope="col">LastName</th>
+                                <th scope="col">Contact</th>
+                                <th scope="col">City</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Salary</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="emp in SearchedEmployee">
+                                <td>{{emp.empId}}</td>
+                                <td>{{emp.firstName}}</td>
+                                <td>{{emp.lastName}}</td>
+                                <td>{{emp.contact}}</td>
+                                <td>{{emp.city}}</td>
+                                <td>{{emp.email}}</td>
+                                <td>{{emp.salary}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!--------------------------------------table to get All data from database---------------------------------------->
+            <table class="table" ng-if="!EmployeeModel.search">
+                <thead>
+                    <tr>
+                        <th scope="col">EmpId</th>
+                        <th scope="col">FirstName</th>
+                        <th scope="col">LastName</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Salary</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in ListOfEmployee ">
+                        <td>
+                            <input style="border:none" type="text" ng-model="item.empId" />
+                        </td>
+
+                        <td>
+                            <input style="border:none" type="text" ng-model="item.firstName" />
+                        </td>
+                        <td>
+                            <input style="border:none" type="text" ng-model="item.lastName" />
+                        </td>
+
+                        <td>
+                            <input style="border:none" type="text" ng-model="item.contact" />
+                        </td>
+
+                        <td>
+                            <input style="border:none" type="text" ng-model="item.city" />
+                        </td>
+
+                        <td>
+                            <input style="border:none" type="text" ng-model="item.email" />
+                        </td>
+
+                        <td>
+                            <input style="border:none" type="text" ng-model="item.salary" />
+                        </td>
+
+                        <td>
+                            <button ng-click="UpdateEmployee(item)">
+                                <span class="glyphicon glyphicon-pencil">update</span>
+                            </button>
+                        </td>
+
+                        <td>
+                            <button type="button" class="btn btn-primary btn-xs" value="Submit" ng-click="DeleteEmp(item.empId)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+<!-----------------------------------form for adding the details of Employee in database--------------------------------------------------------------->
+       <button type="button" ng-click="ShowForm()">AddEmployee</button>
+        <!------if AddEmployee is true div will be open-------->
+           <div ng-if="AddEmployee==true">
+           <h1>Employee Information Form:</h1>
+           <form name="myForm">
+               <label for="EmpId">EmpId: </label>
+               <br />
+                 <input type="text" name="Empid" ng-model="EmployeeModel.EmpId" ng-minlength="1" ng-maxlength="2" required />
+  <!--  <div style="color:red" ng-messages="myForm.Empid.$error" ng-if="myForm.Empid.$touched"> EmpId required</div> */-->
+               <br />
+
+               <label for="FirstName">First Name: </label>
+               <br />
+               <input type="text" name="firstName" ng-model="EmployeeModel.FirstName" ng-minlength="4" ng-maxlength="10" required />
+               <!--   <div style="color:red" ng-messages="myForm.firstName.$error" ng-if="myForm.firstName.$touched">
+        <p ng-message="minlength">FirstName is required.</p>
+    </div> -->
+               <br />
+
+               <label for="Lastname">Last Name</label>
+               <br />
+               <input type="text" name="lastname" ng-model="EmployeeModel.LastName" />
+               <!--<div style="color:red" ng-messages="myForm.lastname.$error" ng-if="myForm.lastname.$touched">
+        <p ng-message="minlength">LastName is required.</p>
+    </div>-->
+               <br />
+
+               <label for="Contact">Contact</label>
+               <br />
+               <input type="text" name="contact" ng-model="EmployeeModel.Contact" ng-minlength="10" ng-maxlength="10" required />
+               <!--  <div style="color:red" ng-messages="myForm.contact.$error" ng-if="myForm.contact.$touched">
+        <p ng-message="minlength">Contact is required.</p>
+    </div>-->
+               <br />
+
+               <label for="City">City</label>
+               <br />
+               <input type="text" name="city" ng-model="EmployeeModel.City" ng-minlength="4" ng-maxlength="10" required />
+               <!--   <div style="color:red" ng-messages="myForm.city.$error" ng-if="myForm.city.$touched">
+        <p ng-message="minlength">City is required.</p>
+    </div>-->
+
+               <br />
+               <label for="Email">Email</label>
+               <br />
+               <input type="text" name="email" ng-model="EmployeeModel.Email" ng-minlength="10" ng-maxlength="20" required />
+               <!--   <div style="color:red" ng-messages="myForm.email.$error" ng-if="myForm.email.$touched">
+        <p ng-message="minlength">Email is required.</p>
+    </div>-->
+               <br />
+
+               <label for="Salary">Salary</label>
+               <br />
+               <input type="text" name="salary" ng-model="EmployeeModel.Salary" ng-minlength="5" ng-maxlength="7" required />
+               <!--  <div style="color:red" ng-messages="myForm.salary.$error" ng-if="myForm.salary.$touched">
+                   <p ng-message="minlength">Salary is required.</p>
+               </div>-->
+               <br />
+               <br />
+
+               <input type="button" class="btn btn-warning" value="Submit" ng-click="InsertData(EmployeeModel)" />
+
+           </form>
+           </div>
+          </div>
+    </body>

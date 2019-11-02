@@ -27,5 +27,13 @@ namespace CommonLayer.Models
         {
             get;set;
         }
+
+        /// <summary>
+        /// total user in table
+        /// </summary>
+        public int TotalUsers
+        {
+            get; set;
+        }
     }
 }

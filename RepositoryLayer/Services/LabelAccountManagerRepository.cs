@@ -92,7 +92,7 @@ namespace RepositoryLayer.Services
         /// <returns>returns the list of labels</returns>
         public IList<LabelModel> GetLabel(string userId)
         {
-            List<LabelModel> list = new List<LabelModel>();
+            IList<LabelModel> list = new List<LabelModel>();
             var result = from label in context.LabelModels.Where(s => s.UserId == userId) select label;
             foreach (var label in result)
             {

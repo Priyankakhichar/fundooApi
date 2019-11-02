@@ -176,7 +176,7 @@ namespace RepositoryLayer.Services
         }
         
         /// <summary>
-        /// get user list to get all user to the admin
+        /// get user list method to get all users to the admin
         /// </summary>
         /// <param name="tokenString"></param>
         /// <returns></returns>
