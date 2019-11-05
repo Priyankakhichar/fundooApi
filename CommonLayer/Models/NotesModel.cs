@@ -102,9 +102,9 @@ namespace CommonLayer.Models
 
         public IList<LabelModel> labelIdList { get; set; }
 
-        //public IList<int> NoteId
-        //{
-        //    get; set;
-        //}
+        public IList<int> Notes
+        {
+            get; set;
+        }
     }
 }

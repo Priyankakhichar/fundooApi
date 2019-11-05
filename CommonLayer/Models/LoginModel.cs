@@ -21,7 +21,5 @@ namespace CommonLayer.Models
         /// password
         /// </summary>
         public string Password;
-
-
     }
 }

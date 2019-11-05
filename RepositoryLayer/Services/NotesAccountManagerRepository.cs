@@ -9,14 +9,12 @@ namespace RepositoryLayer.Services
 {
     using CommonLayer.Enum;
     using CommonLayer.Models;
-    using Newtonsoft.Json;
     using RepositoryLayer.Context;
     using RepositoryLayer.Interface;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class NotesAccountManagerRepository : INotesAccountManagerRepository
@@ -210,8 +208,8 @@ namespace RepositoryLayer.Services
                 {
                     notesData.Image = model.Image;
                 }
-                notesData.ModifiedDate = DateTime.Now;
-               
+
+                notesData.ModifiedDate = DateTime.Now; 
             }
             else
             {
@@ -239,36 +237,38 @@ namespace RepositoryLayer.Services
                     }
                 }
             }
+
             ////save changes to the database
             var result = await this.context.SaveChangesAsync();
-
+            ////add label to perticular note
             if (model.labelIdList != null)
             {
-                foreach (var labelid in model.labelIdList)
+                foreach (var labelId in model.labelIdList)
                 {
                     ////verifiyng if the label is exist or not
-                    var label = this.context.LabelModels.Where(g => g.Id == labelid.Id).FirstOrDefault();
+                    var label = this.context.LabelModels.Where(g => g.Id == labelId.Id).FirstOrDefault();
                     if(label != null)
                     {
-                        ////calling add Label api to add the label to a perticular note
-                        bool labelResult = await this._labelRepository.AddLabelToNote(labelid.Id, noteId, model.UserId);
+                        //// if label id is already available it will add to the notes...calling add Label api to add the label to a perticular note
+                        bool labelResult = await this._labelRepository.AddLabelToNote(labelId.Id, noteId, model.UserId);
                     }
                     else
                     {
+                        ////if label id is not available in label tabel it will first add to the label table after it should add to the notes...
                         ////adding parameters to the notes model entity class
                         var labelModel = new LabelModel()
                         {
                             UserId = model.UserId,
-                            LableName = labelid.LableName,
-                            CreatedDate = labelid.CreatedDate,
-                            ModifiedDate = labelid.ModifiedDate
+                            LableName = labelId.LableName,
+                            CreatedDate = labelId.CreatedDate,
+                            ModifiedDate = labelId.ModifiedDate
                         };
 
                         ////adding model to the data base
                         this.context.Add(labelModel);
 
                         ////adding the label to perticular note id
-                        bool addLabelToNote = await this._labelRepository.AddLabelToNote(labelid.Id, noteId, model.UserId);
+                        bool addLabelToNote = await this._labelRepository.AddLabelToNote(labelId.Id, noteId, model.UserId);
                     }
                 }
                

@@ -65,5 +65,13 @@ namespace CommonLayer.Models
         {
             get; set;
         }
+
+        /// <summary>
+        /// Is suspended filed for account suspend
+        /// </summary>
+        public bool IsSuspended
+        {
+            get; set;
+        }
     }
 }

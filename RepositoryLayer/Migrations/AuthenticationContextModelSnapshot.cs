@@ -308,6 +308,8 @@ namespace RepositoryLayer.Migrations
 
                     b.Property<string>("Image");
 
+                    b.Property<bool>("IsSuspended");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(150)");
 
@@ -326,7 +328,7 @@ namespace RepositoryLayer.Migrations
             modelBuilder.Entity("CommonLayer.Models.LabelModel", b =>
                 {
                     b.HasOne("CommonLayer.Models.NotesModel")
-                        .WithMany("labelId")
+                        .WithMany("labelIdList")
                         .HasForeignKey("NotesModelId");
                 });
 

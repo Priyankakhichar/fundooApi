@@ -27,10 +27,14 @@ namespace CommonLayer.Models
             get; set;
         }
 
+        /// <summary>
+        /// id
+        /// </summary>
         public int Id
         {
             get; set;
         }
+
         /// <summary>
         /// last name
         /// </summary>
@@ -78,6 +82,7 @@ namespace CommonLayer.Models
         {
             get; set;
         }
+
         /// <summary>
         /// Role type
         /// </summary>
@@ -87,12 +92,23 @@ namespace CommonLayer.Models
             get; set;
         }
 
+        /// <summary>
+        /// Service id
+        /// </summary>
         [Required]
         [ForeignKey("ServiceModel")]
         public int ServiceId
         {
             get; set;
         }
-       
+
+        /// <summary>
+        /// Is suspended filed for account suspend
+        /// </summary>
+        public bool IsSuspended
+        {
+            get; set;
+        }
+
     }
 }
