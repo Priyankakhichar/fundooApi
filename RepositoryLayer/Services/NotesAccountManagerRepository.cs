@@ -9,10 +9,13 @@ namespace RepositoryLayer.Services
 {
     using CommonLayer.Enum;
     using CommonLayer.Models;
+    using CommonLayer.RedisCache;
+    using Microsoft.AspNetCore.Identity;
     using RepositoryLayer.Context;
     using RepositoryLayer.Interface;
     using System;
     using System.Collections.Generic;
+    using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -25,6 +28,7 @@ namespace RepositoryLayer.Services
         private AuthenticationContext context;
 
         private ILabelAccountManager _labelRepository;
+
 
         /// <summary>
         /// constructor to initialize the context variable 
@@ -41,41 +45,50 @@ namespace RepositoryLayer.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<bool> AddNotes(NotesModel model)
+        public async Task<bool> AddNotes(NotesModel model, string token)
         {
-            try
+            var tokenString = new JwtSecurityToken(jwtEncodedString: token);
+            var email = tokenString.Claims.First(c => c.Type == "Email").Value;
+            RedisCache redis = new RedisCache();
+            var redisResult = redis.GetRedis(email);
+            if (redisResult != token)
             {
-                var notesModel = new NotesModel()
+                try
                 {
-                    Title = model.Title,
-                    Id = model.Id,
-                    Description = model.Description,
-                    UserId = model.UserId,
-                    Color = model.Color,
-                    NoteType = model.NoteType,
-                    CreateDate = model.CreateDate,
-                    ModifiedDate = model.ModifiedDate,
-                    Image = model.Image
-                };
+                    var notesModel = new NotesModel()
+                    {
+                        Title = model.Title,
+                        Id = model.Id,
+                        Description = model.Description,
+                        UserId = model.UserId,
+                        Color = model.Color,
+                        NoteType = model.NoteType,
+                        CreateDate = model.CreateDate,
+                        ModifiedDate = model.ModifiedDate,
+                        Image = model.Image
+                    };
 
-                ////adding the details to the the data base
-                this.context.Add(notesModel);
+                    ////adding the details to the the data base
+                    this.context.Add(notesModel);
 
-                ////saving the changes to the database
-                var result = await this.context.SaveChangesAsync();
+                    ////saving the changes to the database
+                    var result = await this.context.SaveChangesAsync();
 
-                if (result > 0)
-                {
-                    return true;
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                   
+                   return false;
                 }
-                else
+                catch (Exception ex)
                 {
-                    return false;
+                    throw new Exception(ex.Message);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message);
+                throw new Exception("token expired");
             }
         }
 
@@ -180,23 +193,23 @@ namespace RepositoryLayer.Services
             ////if notes data have records then it will update the records
             if (notesData != null)
             {
-                if (model.Title != "string" || model.Title != null)
+                if (model.Title != null)
                 {
                     notesData.Title = model.Title;
                 }
-                if (model.Description != "string" || model.Description != null)
+                if (model.Description != null)
                 {
                     notesData.Description = model.Description;
                 }
-                if (model.UserId != "string" || model.UserId != null)
+                if (model.UserId != null)
                 {
                     notesData.UserId = model.UserId;
                 }
-                if (model.Color != "string" || model.Color != null)
+                if (model.Color != null)
                 {
                     notesData.Color = model.Color;
                 }
-                if (model.NoteType != 0 || !model.Equals(null))
+                if (!model.Equals(null))
                 {
                     notesData.NoteType = model.NoteType;
                 }
@@ -204,7 +217,7 @@ namespace RepositoryLayer.Services
                 {
                     notesData.IsPin = model.IsPin;
                 }
-                if (model.Image != "string" || model.Image != null)
+                if (model.Image != null)
                 {
                     notesData.Image = model.Image;
                 }
@@ -290,22 +303,29 @@ namespace RepositoryLayer.Services
         /// <param name="file">file</param>
         /// <param name="noteId">noteId</param>
         /// <returns></returns>
-        public string AddImage(string url, int noteId)
+        public string AddImage(string url, int noteId, string userId)
         {
-
-            ////getting the row according to the note id
-            var user = context.NotesModels.Where(u => u.Id == noteId).FirstOrDefault();
-
-            ////placing the url
-            user.Image = url;
-            var result = this.context.SaveChanges();
-            if (result != 0)
+            var advanceUser = this.context.ApplicationUser.Where(g => g.Id == userId && g.ServiceId == 2).FirstOrDefault();
+            if (advanceUser != null)
             {
-                return "image successfully added";
+                ////getting the row according to the note id
+                var user = context.NotesModels.Where(u => u.Id == noteId).FirstOrDefault();
+
+                ////placing the url
+                user.Image = url;
+                var result = this.context.SaveChanges();
+                if (result != 0)
+                {
+                    return "image successfully added";
+                }
+                else
+                {
+                    return "image upload failed";
+                }
             }
             else
             {
-                return "image upload failed";
+                return "only advance user can add Image to notes";
             }
         }
 

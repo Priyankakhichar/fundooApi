@@ -11,7 +11,6 @@ namespace FundooNoteApi.Controllers
     using CommonLayer.Models;
     using CommonLayer.Struct;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -43,7 +42,7 @@ namespace FundooNoteApi.Controllers
         public IActionResult RegisterUser(UserRegistration model)
         {
             var result = this._business.RegisterUser(model);
-            return Ok(result);
+            return Ok(new { result });
         }
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace FundooNoteApi.Controllers
         public IActionResult Login(LoginModel model)
         {
             var result = this._business.Login(model);
-            return Ok(result);
+            return Ok(new { result });
         }
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace FundooNoteApi.Controllers
         public IActionResult GetUserStatistics(string token)
         {
             var result = this._business.GetUserStatistics(token);
-            return Ok(result);
+            return Ok(new { result });
         }
 
         /// <summary>
@@ -84,14 +83,20 @@ namespace FundooNoteApi.Controllers
         public IActionResult UpdateUser(int userId, string tokenString, string role, bool isSuspended)
         {
             var result = this._business.UpdateUser(userId, tokenString, role, isSuspended);
-            return Ok(result);
+            return Ok(new { result });
         }
 
+        /// <summary>
+        /// get total notes api to get total notess
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="tokenString"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("getNotes")]
-        public async Task<NoteTypes> GetTotalNotes(string userId)
+        public async Task<NoteTypes> GetTotalNotes(string userId, string tokenString)
         {
-            var result = await this._business.GetTotalNotes(userId);
+            var result = await this._business.GetTotalNotes(userId, tokenString);
             return result;
         }
     }

@@ -47,7 +47,7 @@ namespace RepositoryLayer.Interface
         /// <returns>returns success or failuer message</returns>
         string UpdateUser(int userId, string tokenString, string role, bool isSuspended);
 
-        Task<NoteTypes> GetTotalNotes(string userId);
+        Task<NoteTypes> GetTotalNotes(string userId, string tokenString);
 
     }
 }

@@ -25,7 +25,7 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<bool> AddNotes(NotesModel model);
+        Task<bool> AddNotes(NotesModel model, string token);
 
         /// <summary>
         /// method to delete notes
@@ -55,7 +55,7 @@ namespace BusinessLayer.Interface
         /// <param name="file"></param>
         /// <param name="noteId"></param>
         /// <returns></returns>
-        string AddImage(IFormFile file, int noteId);
+        string AddImage(IFormFile file, int noteId, string userId);
 
         /// <summary>
         /// add reminder method

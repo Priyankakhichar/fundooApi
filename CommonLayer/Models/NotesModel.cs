@@ -102,6 +102,7 @@ namespace CommonLayer.Models
 
         public IList<LabelModel> labelIdList { get; set; }
 
+        [NotMapped]
         public IList<int> Notes
         {
             get; set;

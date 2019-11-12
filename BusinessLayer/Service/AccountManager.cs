@@ -14,7 +14,8 @@ namespace BusinessLayer.Service
     using RepositoryLayer.Interface;
     using ServiceStack.Redis;
     using System;
-    using System.Text;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -188,11 +189,22 @@ namespace BusinessLayer.Service
         /// logout method
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Logout()
+        public async Task<string> Logout(string tokenString)
         {
+            var token = new JwtSecurityToken(jwtEncodedString: tokenString);
+            var email = token.Claims.First(c => c.Type == "Email").Value;
             try
             {
-                return await this.accountManagerRepository.Logout();
+                var result =  await this.accountManagerRepository.Logout(tokenString);
+                if(result != null)
+                {
+                    using(var redis = new RedisClient())
+                    {
+                        var key = email;
+                        redis.Set(key, tokenString);
+                    }
+                }
+                return result;
             }
             catch(Exception ex)
             {

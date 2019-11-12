@@ -42,13 +42,14 @@ namespace BusinessLayer.Service
         /// </summary>
         /// <param name="model"></param>
         /// <returns>returning true if notes added to the database</returns>
-        public async Task<bool> AddNotes(NotesModel model)
+        public async Task<bool> AddNotes(NotesModel model, string token)
         {
             try
             {
+
                 if (!model.Equals(null))
                 {
-                    return await this.accountRepository.AddNotes(model);
+                    return await this.accountRepository.AddNotes(model, token);
                 }
                 else
                 {
@@ -142,7 +143,7 @@ namespace BusinessLayer.Service
         /// <param name="file"></param>
         /// <param name="noteId"></param>
         /// <returns></returns>
-        public string AddImage(IFormFile file, int noteId)
+        public string AddImage(IFormFile file, int noteId, string userId)
         {
             try
             {
@@ -154,7 +155,7 @@ namespace BusinessLayer.Service
 
 
                 ////added the reference to the repository class
-                return this.accountRepository.AddImage(url, noteId);
+                return this.accountRepository.AddImage(url, noteId, userId);
             }
             catch (Exception ex)
             {

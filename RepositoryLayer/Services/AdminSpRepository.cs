@@ -154,6 +154,9 @@ namespace RepositoryLayer.Services
             {
                 connection.Close();
             }
+
+
+
         }
 
         /// <summary>
@@ -225,26 +228,11 @@ namespace RepositoryLayer.Services
         /// <returns>returns success or failuer message</returns>
         public string UpdateUser(int userId, string tokenString, string role, bool isSuspended)
         {
-            var token = new JwtSecurityToken(jwtEncodedString: tokenString);
-            var userName = token.Claims.First(c => c.Type == "userName").Value;
-            SqlCommand command = new SqlCommand("GetUsers", connection);
-            command.CommandType = CommandType.StoredProcedure;
 
-            ////adding the parameter to the stored procedure
-            command.Parameters.AddWithValue("@UserName", userName);
-
-            ////opening the connection
-            connection.Open();
-
-            ////executing the query
-            command.ExecuteNonQuery();
-
-            ////getting records from data base
-            SqlDataReader reader = command.ExecuteReader();
-            if (reader.HasRows)
+            if (IsValidUser(tokenString))
             {
                 ////command object for update user stored procedure
-                command = new SqlCommand("UpdateUser", connection);
+                SqlCommand command = new SqlCommand("UpdateUser", connection);
                 command.CommandType = CommandType.StoredProcedure;
 
                 ////adding the is, role, Is suspended parameter to the stored procedure
@@ -273,74 +261,93 @@ namespace RepositoryLayer.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>returning the count of notes</returns>
-        public async Task<NoteTypes> GetTotalNotes(string userId)
+        public async Task<NoteTypes> GetTotalNotes(string userId, string tokenString)
         {
             try
-            {
-                using(SqlConnection newConnection = new SqlConnection(connectionstring))
-                { 
-                ////command object to connect with stored procedure
-                using (SqlCommand command = new SqlCommand("GetNotes", newConnection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    ////adding the user id to the sotred procedure
-                    command.Parameters.AddWithValue("@UserId", userId);
-                        ////opening the connection
-                        newConnection.Open();
-                        ////executing the query in stored procedure
-                        //await command.ExecuteNonQueryAsync();
-
-                        ////data reader to read the records from database
-                        using (SqlDataReader dataReader = await command.ExecuteReaderAsync())
+            {             
+                    if (IsValidUser(tokenString))
+                    {
+                        using (SqlConnection newConnection = new SqlConnection(connectionstring))
                         {
-                            var data = dataReader;
-                            int noteCount = 0;
-                            int archiveCount = 0;
-                            int trashCount = 0;
-
-                            ////object of struct NoteTypes
-                            NoteTypes note = new NoteTypes();
-                            if (dataReader.HasRows)
+                            ////command object to connect with stored procedure
+                            using (SqlCommand newCommand = new SqlCommand("GetNotes", newConnection))
                             {
-                                while (dataReader.Read())
+                                newCommand.CommandType = CommandType.StoredProcedure;
+
+                                ////adding the user id to the sotred procedure
+                                newCommand.Parameters.AddWithValue("@UserId", userId);
+                                ////opening the connection
+                                newConnection.Open();
+
+                                ////data reader to read the records from database
+                                using (SqlDataReader dataReader = await newCommand.ExecuteReaderAsync())
                                 {
-                                    ////if value of Note type is zero it will increment the notecount by 1.
-                                    if (Convert.ToInt32(dataReader["NoteType"]) == 0)
+                                    var data = dataReader;
+                                    ////declared a variable and initlize it with zero to store the value of note count
+                                    int noteCount = 0;
+                                    int archiveCount = 0;
+                                    int trashCount = 0;
+
+                                    ////object of struct NoteTypes
+                                    NoteTypes note = new NoteTypes();
+                                    if (dataReader.HasRows)
                                     {
-                                        noteCount++;
-                                    }
-                                    ////if value of notetype is 1 , it will increment the archive count by 1.
-                                    else if (Convert.ToInt32(dataReader["Notetype"]) == 1)
-                                    {
-                                        archiveCount++;
-                                    }
-                                    ////if value of note type is 2 it will increment the trash count by 1.
-                                    else
-                                    {
-                                        trashCount++;
+                                        while (dataReader.Read())
+                                        {
+                                            ////if value of Note type is zero it will increment the notecount by 1.
+                                            if (Convert.ToInt32(dataReader["NoteType"]) == 0)
+                                            {
+                                                noteCount++;
+                                            }
+                                            ////if value of notetype is 1 , it will increment the archive count by 1.
+                                            else if (Convert.ToInt32(dataReader["Notetype"]) == 1)
+                                            {
+                                                archiveCount++;
+                                            }
+                                            ////if value of note type is 2 it will increment the trash count by 1.
+                                            else
+                                            {
+                                                trashCount++;
+                                            }
+                                        }
+
+                                        // dataReader.Close();
+                                        ////storing the values in struct variables
+                                        note.Notes = noteCount;
+                                        note.Archive = archiveCount;
+                                        note.Trash = trashCount;
+                                        return note;
                                     }
                                 }
-                               // dataReader.Close();
-                                ////storing the values in struct variables
-                                note.Notes = noteCount;
-                                note.Archive = archiveCount;
-                                note.Trash = trashCount;
-                                return note;
                             }
                         }
-                       
                     }
-                    return new NoteTypes();
-                        ////declared a variable and initlize it with zero to store the value of note count
-                }
 
+                 return new NoteTypes();
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
+        }
+        public bool IsValidUser(string tokenString)
+        {
+            var token = new JwtSecurityToken(jwtEncodedString: tokenString);
+            var userName = token.Claims.First(c => c.Type == "userName").Value;
+            SqlCommand command = new SqlCommand("GetUsers", connection);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@userName", userName);
+            ////opening the connection
+            connection.Open();
+            SqlDataReader reader = command.ExecuteReader();
+            if(reader.HasRows)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

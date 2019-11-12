@@ -108,10 +108,7 @@ namespace FundooNoteApi
                 c.OperationFilter<FileUploadedOperation>();
             });
 
-          
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -136,6 +133,7 @@ namespace FundooNoteApi
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFandooApp");
+               
             });
 
             app.UseAuthentication();

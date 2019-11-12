@@ -63,6 +63,6 @@ namespace BusinessLayer.Interface
         /// logout
         /// </summary>
         /// <returns></returns>
-        Task<string> Logout();
+        Task<string> Logout(string token);
     }
 }

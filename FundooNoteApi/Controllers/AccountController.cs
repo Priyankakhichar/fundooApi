@@ -151,9 +151,9 @@ namespace FundooNoteApi.Controllers
 
         [HttpPost]
         [Route("logout")]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout(string token)
         {
-            var result = await this._accountmanager.Logout();
+            var result = await this._accountmanager.Logout(token);
             return Ok(new { result });
         }
     }

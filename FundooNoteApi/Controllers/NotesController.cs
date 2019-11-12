@@ -20,9 +20,10 @@ namespace FundooNoteApi.Controllers
     /// <summary>
     /// notes controller
     /// </summary>
-    [Authorize]
+   
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class NotesController : ControllerBase
     {
         /// <summary>
@@ -46,10 +47,10 @@ namespace FundooNoteApi.Controllers
         /// <returns></returns>
         
         [HttpPost]
-        [Route("addNotes")]
-        public async Task<bool> AddNotes(NotesModel model)
+        [Route("addNotes/{token}")]
+        public async Task<bool> AddNotes(NotesModel model, string token)
         {
-            var result = await this.noteManager.AddNotes(model);
+            var result = await this.noteManager.AddNotes(model, token);
             return result;
         }
 
@@ -98,7 +99,6 @@ namespace FundooNoteApi.Controllers
         
         [HttpGet]
         [Route("getNotes/{userId}")]
-        [Authorize]
         public (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType)
         {
             var result = this.noteManager.GetNotes(userId, noteType);
@@ -122,9 +122,9 @@ namespace FundooNoteApi.Controllers
         
         [HttpPost]
         [Route("upoadImage")]
-        public string UploadImage(IFormFile filePath, int noteId)
+        public string UploadImage(IFormFile filePath, int noteId, string userId)
         {
-            return this.noteManager.AddImage(filePath, noteId);    
+            return this.noteManager.AddImage(filePath, noteId, userId);    
         }
 
         /// <summary>
@@ -147,6 +147,7 @@ namespace FundooNoteApi.Controllers
         /// <param name="noteId"></param>
         /// <returns></returns>
         
+
         [HttpDelete]
         [Route("removeReminder")]
         public string DeleteReminder(int noteId)

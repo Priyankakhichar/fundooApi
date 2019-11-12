@@ -104,11 +104,11 @@ namespace BusinessLayer.Service
             }
         }
 
-        public async Task<NoteTypes> GetTotalNotes(string userId)
+        public async Task<NoteTypes> GetTotalNotes(string userId, string tokenString)
         {
             try
             {
-                var result = await repository.GetTotalNotes(userId);
+                var result = await repository.GetTotalNotes(userId, tokenString);
                 return result;
             }
             catch (Exception ex)

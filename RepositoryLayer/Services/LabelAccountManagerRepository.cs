@@ -8,8 +8,10 @@
 namespace RepositoryLayer.Services
 {
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Identity;
     using RepositoryLayer.Context;
     using RepositoryLayer.Interface;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -23,6 +25,8 @@ namespace RepositoryLayer.Services
         /// Authentication context variable
         /// </summary>
         private AuthenticationContext context;
+
+        private UserManager<ApplicationUser> _userManager;
 
         /// <summary>
         /// constructor to initilize the authentication context
@@ -40,21 +44,29 @@ namespace RepositoryLayer.Services
         /// <returns>returns true if label successfully added to the database</returns>
         public async Task<bool> AddLabel(LabelModel model)
         {
-            var labelModel = new LabelModel()
+            var advanceUser = this.context.ApplicationUser.Where(g => g.Id == model.UserId && g.ServiceId == 2);
+            if (advanceUser != null)
             {
-                UserId = model.UserId,
-                LableName = model.LableName,
-                CreatedDate = model.CreatedDate,
-                ModifiedDate = model.ModifiedDate
-            };
+                var labelModel = new LabelModel()
+                {
+                    UserId = model.UserId,
+                    LableName = model.LableName,
+                    CreatedDate = model.CreatedDate,
+                    ModifiedDate = model.ModifiedDate
+                };
 
-            this.context.Add(labelModel);
+                this.context.Add(labelModel);
 
-            ////save chnages method to save the data to the database
-            var result = await this.context.SaveChangesAsync();
-            if(result > 0)
-            {
-                return true;
+                ////save chnages method to save the data to the database
+                var result = await this.context.SaveChangesAsync();
+                if (result > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {

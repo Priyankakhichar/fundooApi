@@ -7,9 +7,7 @@
 ////-------------------------------------------------------------------------------------------------------------------------------
 namespace RepositoryLayer.Services
 {
-    using CommonLayer;
     using CommonLayer.Models;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
@@ -21,7 +19,6 @@ namespace RepositoryLayer.Services
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
-    using System.IdentityModel.Tokens;
 
     /// <summary>
     /// AccountManagerRepository class having main functionality
@@ -110,7 +107,8 @@ namespace RepositoryLayer.Services
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim("userId", user.Id.ToString())
+                        new Claim("userId", user.Id.ToString()),
+                        new Claim("Email", user.Email.ToString())
                     }),
                     ////DateTime.UtcNow sets the current system time. it allow user login for 30 minutes
                     Expires = DateTime.UtcNow.AddDays(1),
@@ -279,9 +277,9 @@ namespace RepositoryLayer.Services
         /// log out method
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Logout()
+        public async Task<string> Logout(string token)
         {
-             await this._signInManager.SignOutAsync();
+            await this._signInManager.SignOutAsync();
             return "user logged out";
         }
     }

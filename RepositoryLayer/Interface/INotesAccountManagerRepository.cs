@@ -9,7 +9,6 @@ namespace RepositoryLayer.Interface
 {
     using CommonLayer.Enum;
     using CommonLayer.Models;
-    using Microsoft.AspNetCore.Http;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -24,7 +23,7 @@ namespace RepositoryLayer.Interface
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<bool> AddNotes(NotesModel model);
+        Task<bool> AddNotes(NotesModel model, string token);
 
         /// <summary>
         /// delete notes method
@@ -54,7 +53,7 @@ namespace RepositoryLayer.Interface
         /// <param name="file">file</param>
         /// <param name="noteId">noteId</param>
         /// <returns>returns the success or failure message</returns>
-        string AddImage(string url, int noteId);
+        string AddImage(string url, int noteId, string userId);
 
         /// <summary>
         /// adding the reminder

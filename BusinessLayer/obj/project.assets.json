@@ -4965,7 +4965,8 @@
           "Experimental.System.Messaging": "1.0.0",
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.Extensions.Identity.Stores": "2.1.1",
-          "NEST": "7.3.0"
+          "NEST": "7.3.0",
+          "ServiceStack.Redis": "5.6.0"
         },
         "compile": {
           "bin/placeholder/CommonLayer.dll": {}
