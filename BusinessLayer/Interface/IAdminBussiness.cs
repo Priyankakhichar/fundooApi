@@ -8,6 +8,8 @@
 namespace BusinessLayer.Interface
 {
     using CommonLayer.Models;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -41,6 +43,7 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        Task<UserStatisticsModel> GetUserList(string token);
+        Task<UserStatisticsModel> GetUserNotesCount(string token);
+        Task<IQueryable<ApplicationUser>> GetUserList(string tokenString);
     }
 }

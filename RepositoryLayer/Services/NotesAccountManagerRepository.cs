@@ -7,9 +7,11 @@
 ////-------------------------------------------------------------------------------------------------------------------------------
 namespace RepositoryLayer.Services
 {
+    using CommonLayer.Constants;
     using CommonLayer.Enum;
     using CommonLayer.Models;
     using CommonLayer.RedisCache;
+    using CommonLayer.TokenDecode;
     using Microsoft.AspNetCore.Identity;
     using RepositoryLayer.Context;
     using RepositoryLayer.Interface;
@@ -40,16 +42,21 @@ namespace RepositoryLayer.Services
             this._labelRepository = labelRepository;
         }
 
+        DecodeToken decodeToken = new DecodeToken();
+
+        RedisCache redis = new RedisCache();
+
         /// <summary>
         /// add notes method to add notes to the database
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<bool> AddNotes(NotesModel model, string token)
+        public async Task<string> AddNotes(NotesModel model, string token)
         {
-            var tokenString = new JwtSecurityToken(jwtEncodedString: token);
-            var email = tokenString.Claims.First(c => c.Type == "Email").Value;
-            RedisCache redis = new RedisCache();
+            ////getting email by decoding the token
+            var email = decodeToken.GetEmail(token);
+
+           ////getting the token from redis
             var redisResult = redis.GetRedis(email);
             if (redisResult != token)
             {
@@ -76,19 +83,19 @@ namespace RepositoryLayer.Services
 
                     if (result > 0)
                     {
-                        return true;
+                        return "notes added successfully";
                     }
                    
-                   return false;
+                   return ErrorMessages.somethingUnExceptional;
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(ex.Message);
+                   return ex.Message;
                 }
             }
             else
             {
-                throw new Exception("token expired");
+                return ErrorMessages.tokenExpired;
             }
         }
 
@@ -97,7 +104,7 @@ namespace RepositoryLayer.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<int> DeleteNotes(int id)
+        public async Task<string> DeleteNotes(int id)
         {
             ////linq for delete notes...it storing the information in delete variable for perticular id
             var delete = this.context.NotesModels.Where(d => d.Id == id).FirstOrDefault();
@@ -107,7 +114,14 @@ namespace RepositoryLayer.Services
 
             ////saving the changes to the database
             var result = await this.context.SaveChangesAsync();
-            return result;
+            if (result > 0)
+            {
+                return "Notes deleted successfully";
+            }
+            else
+            {
+                return ErrorMessages.somethingUnExceptional;
+            }
         }
 
         /// <summary>
@@ -182,9 +196,9 @@ namespace RepositoryLayer.Services
         /// <param name="model"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> UpdatesNotes(NotesModel model, int noteId)
+        public async Task<bool> UpdatesNotes(NotesModel model, int noteId, string token)
         {
-
+           
             ////getting the records by id
             var notesData = (from notes in context.NotesModels
                              where notes.Id == noteId
@@ -253,6 +267,7 @@ namespace RepositoryLayer.Services
 
             ////save changes to the database
             var result = await this.context.SaveChangesAsync();
+
             ////add label to perticular note
             if (model.labelIdList != null)
             {
@@ -267,7 +282,7 @@ namespace RepositoryLayer.Services
                     }
                     else
                     {
-                        ////if label id is not available in label tabel it will first add to the label table after it should add to the notes...
+                        ////if label id is not available in label table it will first add to the label table after it should add to the notes...
                         ////adding parameters to the notes model entity class
                         var labelModel = new LabelModel()
                         {
@@ -325,7 +340,7 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                return "only advance user can add Image to notes";
+                return ErrorMessages.advanceUser;
             }
         }
 
@@ -376,7 +391,7 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                return "something went wrong";
+                return ErrorMessages.somethingUnExceptional;
             }
         }
 
@@ -450,7 +465,7 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                return "something went wrong";
+                return ErrorMessages.somethingUnExceptional;
             }
         }
 
@@ -475,7 +490,7 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                return "somthing went wrong";
+                return ErrorMessages.somethingUnExceptional;
             }
         }
 
@@ -509,7 +524,7 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                return "Something went wrong";
+                return ErrorMessages.somethingUnExceptional;
             }
 
         }

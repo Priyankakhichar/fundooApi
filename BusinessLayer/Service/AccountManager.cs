@@ -10,6 +10,7 @@ namespace BusinessLayer.Service
     using BusinessLayer.Interface;
     using CommonLayer;
     using CommonLayer.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using RepositoryLayer.Interface;
     using ServiceStack.Redis;
@@ -189,8 +190,10 @@ namespace BusinessLayer.Service
         /// logout method
         /// </summary>
         /// <returns></returns>
+
         public async Task<string> Logout(string tokenString)
         {
+           
             var token = new JwtSecurityToken(jwtEncodedString: tokenString);
             var email = token.Claims.First(c => c.Type == "Email").Value;
             try

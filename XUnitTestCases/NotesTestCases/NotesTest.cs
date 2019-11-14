@@ -21,24 +21,24 @@ namespace XUnitTestCases.NotesTestCases
         /// create notes unit test
         /// </summary>
        
-        [Fact]
-        public void CreateNotesTest()
-        {
-            var notesdata = new Mock<INotesAccountManagerRepository>();
-            var notes = new NotesAccountManagerService(notesdata.Object);
-            var notesModel = new NotesModel()
-            {
-                Description = "Desciption",
-                Title = "Title",
-                Color = "pink",
-                CreateDate = DateTime.Now,
-                ModifiedDate = DateTime.Now,
-                UserId = "UserId"
-            };
+        //[Fact]
+        //public void CreateNotesTest()
+        //{
+        //    var notesdata = new Mock<INotesAccountManagerRepository>();
+        //    var notes = new NotesAccountManagerService(notesdata.Object);
+        //    var notesModel = new NotesModel()
+        //    {
+        //        Description = "Desciption",
+        //        Title = "Title",
+        //        Color = "pink",
+        //        CreateDate = DateTime.Now,
+        //        ModifiedDate = DateTime.Now,
+        //        UserId = "UserId"
+        //    };
 
-            var result = notes.AddNotes(notesModel);
-            Assert.NotNull(result);
-        }
+        //    var result = notes.AddNotes(notesModel);
+        //    Assert.NotNull(result);
+        //}
 
         /// <summary>
         /// get notes test

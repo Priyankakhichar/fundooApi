@@ -11,7 +11,7 @@ namespace CommonLayer.RedisCache
         {
             using(var redis = new RedisClient())
             {
-               var result =  redis.Get(key);
+               var result = System.Text.Encoding.UTF8.GetString(redis.Get(key)).ToString().Replace("\"", "");
                 return result;
             }
         }

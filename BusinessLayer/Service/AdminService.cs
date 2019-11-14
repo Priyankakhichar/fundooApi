@@ -11,6 +11,8 @@ namespace BusinessLayer.Service
     using CommonLayer.Models;
     using RepositoryLayer.Interface;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -91,12 +93,24 @@ namespace BusinessLayer.Service
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<UserStatisticsModel> GetUserList(string token)
+        public async Task<UserStatisticsModel> GetUserNotesCount(string token)
         {
             try
             {
                 ////reference to the respository class
-                return await this.adminRepository.GetUserList(token);
+                return await this.adminRepository.GetUserNotesCount(token);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<IQueryable<ApplicationUser>> GetUserList(string tokenString)
+        {
+            try
+            {
+                return await this.adminRepository.GetUserList(tokenString);
             }
             catch(Exception ex)
             {

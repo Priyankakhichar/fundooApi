@@ -25,14 +25,14 @@ namespace BusinessLayer.Interface
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<bool> AddNotes(NotesModel model, string token);
+        Task<string> AddNotes(NotesModel model, string token);
 
         /// <summary>
         /// method to delete notes
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<int> DeleteNotes(int id);
+        Task<string> DeleteNotes(int id, string token);
 
         /// <summary>
         /// method to update notes
@@ -40,14 +40,14 @@ namespace BusinessLayer.Interface
         /// <param name="model"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<bool> UpdatesNotes(NotesModel model, int id);
+        Task<bool> UpdatesNotes(NotesModel model, int id, string token);
 
         /// <summary>
         /// method to get notes
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType);
+        (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType, string token);
 
         /// <summary>
         /// upload image

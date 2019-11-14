@@ -9,8 +9,11 @@ namespace BusinessLayer.Service
 {
     using BusinessLayer.Interface;
     using CommonLayer;
+    using CommonLayer.Constants;
     using CommonLayer.Enum;
     using CommonLayer.Models;
+    using CommonLayer.RedisCache;
+    using CommonLayer.TokenDecode;
     using Microsoft.AspNetCore.Http;
     using RepositoryLayer.Interface;
     using ServiceStack.Redis;
@@ -27,6 +30,8 @@ namespace BusinessLayer.Service
         /// repository interface instance variable
         /// </summary>
         private INotesAccountManagerRepository accountRepository;
+        DecodeToken decodeToken = new DecodeToken();
+        RedisCache redis = new RedisCache();
 
         /// <summary>
         /// constructor to initialize the repository instance varible
@@ -42,23 +47,23 @@ namespace BusinessLayer.Service
         /// </summary>
         /// <param name="model"></param>
         /// <returns>returning true if notes added to the database</returns>
-        public async Task<bool> AddNotes(NotesModel model, string token)
+        public async Task<string> AddNotes(NotesModel model, string token)
         {
             try
             {
-
                 if (!model.Equals(null))
                 {
                     return await this.accountRepository.AddNotes(model, token);
                 }
                 else
+
                 {
-                    return false;
+                    return "model is empty";
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return ex.Message;
             }
         }
 
@@ -67,11 +72,23 @@ namespace BusinessLayer.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns>returns the number of rows deleted</returns>
-        public async Task<int> DeleteNotes(int id)
+        public async Task<string> DeleteNotes(int id, string token)
         {
             try
-            {
-                return await this.accountRepository.DeleteNotes(id);
+            {  
+                ////getting email by decoding the token
+                var email = decodeToken.GetEmail(token);
+
+                ////getting the token from redis
+                var redisResult = redis.GetRedis(email);
+                if (redisResult != token)
+                {
+                    return await this.accountRepository.DeleteNotes(id);
+                }
+                else
+                {
+                    return "token expired";
+                }
             }
             catch(Exception ex)
             {
@@ -85,32 +102,46 @@ namespace BusinessLayer.Service
         /// <param name="model"></param>
         /// <param name="id"></param>
         /// <returns>returns true if record updated successfully</returns>
-        public async Task<bool> UpdatesNotes(NotesModel model, int id)
+        public async Task<bool> UpdatesNotes(NotesModel model, int id, string token)
         {
             try
             {
-                var result = await this.accountRepository.UpdatesNotes(model, id);
+                var result = default(bool);
+                ////getting email by decoding the token
+                var email = decodeToken.GetEmail(token);
 
-                ////key to store value in redis
-                var cacheKey = "data" + model.UserId;
-                using (var redis = new RedisClient())
+                ////getting the token from redis
+                var redisResult = redis.GetRedis(email);
+                if (redisResult != token)
                 {
+                     result = await this.accountRepository.UpdatesNotes(model, id, token);
 
-                    ////removing the cache from redis
-                    redis.Remove(cacheKey);
-
-                    ////condtion to check if there are record or not in redis
-                    if (redis.Get(cacheKey) == null)
+                    ////key to store value in redis
+                    var cacheKey = "data" + model.UserId;
+                    using (var redis = new RedisClient())
                     {
-                        if (result == true)
+
+                        ////removing the cache from redis
+                        redis.Remove(cacheKey);
+
+                        ////condtion to check if there are record or not in redis
+                        if (redis.Get(cacheKey) == null)
                         {
-                            ////sets the data to the redis
-                            redis.Set(cacheKey, result);
+                            if (result == true)
+                            {
+                                ////sets the data to the redis
+                                redis.Set(cacheKey, result);
+                            }
                         }
                     }
-                }
 
-                return result;
+                    return result;
+                }
+                else
+                {
+                    return false;
+                }
+                  
             }
             catch (Exception ex)
             {
@@ -123,13 +154,25 @@ namespace BusinessLayer.Service
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>returns the list of notes</returns>
-        public (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType)
+        public (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType, string token)
         {
 
             try
             {
-                ////getting the result from database
-                return this.accountRepository.GetNotes(userId, noteType);   
+                ////getting email by decoding the token
+                var email = decodeToken.GetEmail(token);
+
+                ////getting the token from redis
+                var redisResult = redis.GetRedis(email);
+                if (redisResult != token)
+                {
+                    ////getting the result from database
+                    return this.accountRepository.GetNotes(userId, noteType);
+                }
+                else
+                {
+                    throw new Exception("token Expired");
+                }
             }
             catch (Exception ex)
             {
@@ -204,7 +247,7 @@ namespace BusinessLayer.Service
         /// push notification
         /// </summary>
         /// <returns>returning the list of notes that have reminder between current time and after 10 min</returns>
-        public  async Task<IList<NotesModel>> SendPushNotification()
+        public async Task<IList<NotesModel>> SendPushNotification()
         {
             try
             {
@@ -232,7 +275,7 @@ namespace BusinessLayer.Service
                 }
                 else
                 {
-                    return "empty fields";
+                    return ErrorMessages.emptyFields;
                 }
             }
             catch (Exception ex)
@@ -257,7 +300,7 @@ namespace BusinessLayer.Service
                 }
                 else
                 {
-                    return "invalid id";
+                    return ErrorMessages.invalidId;
                 }
             }
             catch (Exception ex)
@@ -315,7 +358,7 @@ namespace BusinessLayer.Service
             }
             else
             {
-                return "List is empty";
+                return ErrorMessages.emptyFields;
             }   
         }
     }

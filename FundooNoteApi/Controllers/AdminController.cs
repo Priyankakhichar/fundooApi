@@ -82,11 +82,19 @@ namespace FundooNoteApi.Controllers
         /// <returns></returns>
         
         [HttpGet]
-        [Route("getUserList")]
-        public async Task<UserStatisticsModel> GetUserList(string token)
+        [Route("UserStatistics")]
+        public async Task<UserStatisticsModel> GetUserNotesCount(string token)
         {
-            var result = await this._admin.GetUserList(token);
+            var result = await this._admin.GetUserNotesCount(token);
             return result;
+        }
+
+        [HttpGet]
+        [Route("UserList/{token}")]
+        public async Task<IActionResult> GetUserList(string token)
+        {
+            var userList = await this._admin.GetUserList(token);        
+            return Ok(new { userList });
         }
     }
 }

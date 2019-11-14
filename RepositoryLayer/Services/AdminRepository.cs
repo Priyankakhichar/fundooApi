@@ -7,6 +7,7 @@
 ////-------------------------------------------------------------------------------------------------------------------------------
 namespace RepositoryLayer.Services
 {
+    using CommonLayer.Constants;
     using CommonLayer.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
@@ -14,6 +15,7 @@ namespace RepositoryLayer.Services
     using RepositoryLayer.Context;
     using RepositoryLayer.Interface;
     using System;
+    using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
     using System.Security.Claims;
@@ -87,7 +89,7 @@ namespace RepositoryLayer.Services
                 }
                 else
                 {
-                    return "something went wrong";
+                    return ErrorMessages.somethingUnExceptional;
                 }
             }
             catch (Exception ex)
@@ -139,7 +141,7 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                return "Invalid user";
+                return ErrorMessages.invalidUserErrorMessage;
             }
         }
 
@@ -171,7 +173,7 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                return "something went wrong";
+                return ErrorMessages.somethingUnExceptional;
             }
         }
         
@@ -180,13 +182,13 @@ namespace RepositoryLayer.Services
         /// </summary>
         /// <param name="tokenString"></param>
         /// <returns></returns>
-        public async Task<UserStatisticsModel> GetUserList(string tokenString)
+        public async Task<UserStatisticsModel> GetUserNotesCount(string tokenString)
         {
             ////decrpting the token
             var token = new JwtSecurityToken(jwtEncodedString: tokenString);
 
             ////getting the email id from token
-            var email = token.Claims.First(c => c.Type == "email").Value;
+            var email = token.Claims.First(c => c.Type == "Email").Value;
 
             ////varifiyng the user by mail id
             var user = await this._userManager.FindByEmailAsync(email);
@@ -212,7 +214,30 @@ namespace RepositoryLayer.Services
             }
             else
             {
-                throw new Exception("Only admin can access this service");
+                throw new Exception(ErrorMessages.advanceUser);
+            }
+        }
+
+        public async Task<IQueryable<ApplicationUser>> GetUserList(string tokenString)
+        {
+            ////decrpting the token
+            var token = new JwtSecurityToken(jwtEncodedString: tokenString);
+
+            ////getting the email id from token
+            var email = token.Claims.First(c => c.Type == "Email").Value;
+
+            ////varifiyng the user by mail id
+            var user = await this._userManager.FindByEmailAsync(email);
+
+            var result = this.context.ApplicationUser.Where(g => g.Role == "admin" && g.Email == email).FirstOrDefault();
+            if (result != null)
+            {
+                var list = this.context.ApplicationUser.Where(g => g.Role != "admin");
+                return list;
+            }
+            else
+            {
+                throw new Exception("no user exist");
             }
         }
     }

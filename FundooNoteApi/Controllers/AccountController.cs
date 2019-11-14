@@ -14,12 +14,14 @@ namespace FundooNoteApi.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
     /// <summary>
     /// account controller
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         /// <summary>
@@ -43,6 +45,7 @@ namespace FundooNoteApi.Controllers
         /// <returns>returns result</returns>
         [HttpPost]
         [Route("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> PostApplicationUser(UserRegistration registration)
         {
            bool result = await this._accountmanager.RegisterUser(registration);
@@ -63,6 +66,7 @@ namespace FundooNoteApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginModel login)
         {
             var result = await this._accountmanager.Login(login);
@@ -88,6 +92,7 @@ namespace FundooNoteApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("forgetPassword")]
+        [AllowAnonymous]
         public async Task<IActionResult> ForgetPassword(ForgetPasswordModel model)
         {
             var result = await this._accountmanager.ForgetPassword(model);
@@ -108,6 +113,7 @@ namespace FundooNoteApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("resetPassword")]
+        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel model, string token)
         {
             var result = await this._accountmanager.ResetPassword(model, token);
@@ -151,8 +157,12 @@ namespace FundooNoteApi.Controllers
 
         [HttpPost]
         [Route("logout")]
-        public async Task<IActionResult> Logout(string token)
+        [Authorize]
+        public async Task<IActionResult> Logout()
         {
+            var tokenfromheader = Request.Headers["Authorization"].ToString();
+            int index = tokenfromheader.IndexOf(' ') + 1;
+            var token = tokenfromheader.Substring(index);
             var result = await this._accountmanager.Logout(token);
             return Ok(new { result });
         }

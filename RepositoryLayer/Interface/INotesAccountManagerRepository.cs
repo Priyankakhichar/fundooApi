@@ -23,14 +23,14 @@ namespace RepositoryLayer.Interface
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<bool> AddNotes(NotesModel model, string token);
+        Task<string> AddNotes(NotesModel model, string token);
 
         /// <summary>
         /// delete notes method
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<int> DeleteNotes(int id);
+        Task<string> DeleteNotes(int id);
 
         /// <summary>
         /// update noets method
@@ -38,7 +38,7 @@ namespace RepositoryLayer.Interface
         /// <param name="model">model</param>
         /// <param name="id">id</param>
         /// <returns></returns>
-        Task<bool> UpdatesNotes(NotesModel model, int id);
+        Task<bool> UpdatesNotes(NotesModel model, int id, string token);
 
         /// <summary>
         /// get notes method

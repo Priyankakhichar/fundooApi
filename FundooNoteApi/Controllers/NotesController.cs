@@ -47,11 +47,19 @@ namespace FundooNoteApi.Controllers
         /// <returns></returns>
         
         [HttpPost]
-        [Route("addNotes/{token}")]
-        public async Task<bool> AddNotes(NotesModel model, string token)
+        [Route("addNotes")]
+        public async Task<IActionResult> AddNotes(NotesModel model)
         {
+            ////reading the token from header
+            var tokenFromHeader = Request.Headers["Authorization"].ToString();
+
+            ////getting the index of first letter of token
+            int index = tokenFromHeader.IndexOf(' ') + 1;
+
+            ////getting the token
+            var token = tokenFromHeader.Substring(index);
             var result = await this.noteManager.AddNotes(model, token);
-            return result;
+            return Ok(new { result });
         }
 
         /// <summary>
@@ -65,7 +73,15 @@ namespace FundooNoteApi.Controllers
         [Route("updateNotes")]
         public async Task<bool> UpdatesNotes(NotesModel model, int id )
         {
-            var result = await this.noteManager.UpdatesNotes(model, id);
+            ////reading the token from header
+            var tokenFromHeader = Request.Headers["Authorization"].ToString();
+
+            ////getting the index of first letter of token
+            int index = tokenFromHeader.IndexOf(' ') + 1;
+
+            ////getting the token
+            var token = tokenFromHeader.Substring(index);
+            var result = await this.noteManager.UpdatesNotes(model, id, token);
             return result;
         }
 
@@ -79,16 +95,17 @@ namespace FundooNoteApi.Controllers
         [Route("deleteNotes/{id}")]
         public async Task<IActionResult> DeleteNotes(int id)
         {
+            ////reading the token from header
+            var tokenFromHeader = Request.Headers["Authorization"].ToString();
 
-            var result = await this.noteManager.DeleteNotes(id);
-            if (result != 0)
-            {
-                return this.Ok(new { result });
-            }
-            else
-            {
-                return this.NotFound();
-            }
+            ////getting the index of first letter of token
+            int index = tokenFromHeader.IndexOf(' ') + 1;
+
+            ////getting the token
+            var token = tokenFromHeader.Substring(index);
+            var result = await this.noteManager.DeleteNotes(id, token);
+            return this.Ok(new { result });
+
         }
 
         /// <summary>
@@ -101,7 +118,15 @@ namespace FundooNoteApi.Controllers
         [Route("getNotes/{userId}")]
         public (IList<NotesModel>, IList<ApplicationUser>) GetNotes(string userId, EnumNoteType noteType)
         {
-            var result = this.noteManager.GetNotes(userId, noteType);
+            ////reading the token from header
+            var tokenFromHeader = Request.Headers["Authorization"].ToString();
+
+            ////getting the index of first letter of token
+            int index = tokenFromHeader.IndexOf(' ') + 1;
+
+            ////getting the token
+            var token = tokenFromHeader.Substring(index);
+            var result = this.noteManager.GetNotes(userId, noteType, token);
             if (result != (null,null))
             {
                 return result;
@@ -124,6 +149,14 @@ namespace FundooNoteApi.Controllers
         [Route("upoadImage")]
         public string UploadImage(IFormFile filePath, int noteId, string userId)
         {
+            ////reading the token from header
+            var tokenFromHeader = Request.Headers["Authorization"].ToString();
+
+            ////getting the index of first letter of token
+            int index = tokenFromHeader.IndexOf(' ') + 1;
+
+            ////getting the token
+            var token = tokenFromHeader.Substring(index);
             return this.noteManager.AddImage(filePath, noteId, userId);    
         }
 
@@ -138,6 +171,14 @@ namespace FundooNoteApi.Controllers
         [Route("reminder")]
         public string AddReminder(int noteId, DateTime time)
         {
+            ////reading the token from header
+            var tokenFromHeader = Request.Headers["Authorization"].ToString();
+
+            ////getting the index of first letter of token
+            int index = tokenFromHeader.IndexOf(' ') + 1;
+
+            ////getting the token
+            var token = tokenFromHeader.Substring(index);
             return this.noteManager.AddReminder(noteId, time);
         }
 
@@ -186,6 +227,14 @@ namespace FundooNoteApi.Controllers
         [Route("collaboration")]
         public async Task<IActionResult> AddCollabration(NotesCollaboration collaboration)
         {
+            ////reading the token from header
+            var tokenFromHeader = Request.Headers["Authorization"].ToString();
+
+            ////getting the index of first letter of token
+            int index = tokenFromHeader.IndexOf(' ') + 1;
+
+            ////getting the token
+            var token = tokenFromHeader.Substring(index);
             var result = await this.noteManager.AddCollabration(collaboration);
             return Ok(new { result });
         }
