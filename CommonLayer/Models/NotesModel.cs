@@ -18,7 +18,8 @@ namespace CommonLayer.Models
     /// </summary>
     public class NotesModel
     {
-      
+        public string token;
+
         /// <summary>
         /// id
         /// </summary> 

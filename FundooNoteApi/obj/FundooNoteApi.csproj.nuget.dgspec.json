@@ -203,6 +203,10 @@
               "target": "Package",
               "version": "[1.0.0, )"
             },
+            "IdentityServer4": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            },
             "Microsoft.AspNet.WebApi.Core": {
               "target": "Package",
               "version": "[5.2.7, )"

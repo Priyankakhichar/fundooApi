@@ -95,6 +95,8 @@ namespace RepositoryLayer.Services
         /// <param name="loginModel"></param>
         /// <returns></returns>
         public async Task<string> Login(LoginModel loginModel)
+
+
         {
             ////finding the userName from database that we passed
             var user = await _userManager.FindByNameAsync(loginModel.UserName);

@@ -169,6 +169,7 @@ namespace FundooNoteApi.Controllers
         
         [HttpPut]
         [Route("reminder")]
+        [AuthorizeAttribute]
         public string AddReminder(int noteId, DateTime time)
         {
             ////reading the token from header

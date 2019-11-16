@@ -104,6 +104,11 @@ namespace BusinessLayer.Service
             }
         }
 
+        /// <summary>
+        /// Get total notes method and total of notes , archive and trash note by user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>returning the count of notes</returns>
         public async Task<NoteTypes> GetTotalNotes(string userId, string tokenString)
         {
             try

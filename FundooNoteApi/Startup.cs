@@ -28,6 +28,7 @@ namespace FundooNoteApi
     using System.Collections.Generic;
     using Swashbuckle.AspNetCore.SwaggerGen;
 
+    using System.Collections;
 
     public class Startup
     {
@@ -105,8 +106,20 @@ namespace FundooNoteApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyFandooApp", Version = "v1", Description = "Fandoo App" });
-                c.OperationFilter<FileUploadedOperation>();
-            });
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    In = "header",
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = "apiKey"
+                });
+
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                  { "Bearer", new string[] {} }
+                });
+
+                 });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -140,30 +153,6 @@ namespace FundooNoteApi
 
             app.UseMvc();
 
-
-        }
-    }
-    public class FileUploadedOperation : IOperationFilter
-    {
-        /// <summary>
-        /// Apply function
-        /// </summary>
-        /// <param name="swaggerDocument">swaggerDocument parameter</param>
-        /// <param name="documentFilter">documentFilter parameter </param>
-        public void Apply(Operation swaggerDocument, OperationFilterContext documentFilter)
-        {
-            if (swaggerDocument.Parameters == null)
-            {
-                swaggerDocument.Parameters = new List<IParameter>();
-            }
-
-            swaggerDocument.Parameters.Add(new NonBodyParameter
-            {
-                Name = "Authorization",
-                In = "header",
-                Type = "string",
-                Required = true
-            });
         }
     }
 }

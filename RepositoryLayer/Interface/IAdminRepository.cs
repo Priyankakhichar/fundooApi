@@ -44,6 +44,12 @@ namespace RepositoryLayer.Interface
         /// <param name="token"></param>
         /// <returns></returns>
         Task<UserStatisticsModel> GetUserNotesCount(string token);
+
+        /// <summary>
+        /// get user list
+        /// </summary>
+        /// <param name="tokenString"></param>
+        /// <returns></returns>
         Task<IQueryable<ApplicationUser>> GetUserList(string tokenString);
     }
 }

@@ -96,5 +96,6 @@ namespace FundooNoteApi.Controllers
             var userList = await this._admin.GetUserList(token);        
             return Ok(new { userList });
         }
+      
     }
 }

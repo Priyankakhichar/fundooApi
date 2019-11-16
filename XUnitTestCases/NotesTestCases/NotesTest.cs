@@ -51,10 +51,11 @@ namespace XUnitTestCases.NotesTestCases
             var notesModel = new NotesModel()
             {
                 UserId = "UserId",
-                NoteType = 0
+                NoteType = 0,
+                token ="abjhcbscbkcl.ckchndoi.hdkh"
             };
 
-            var result = notes.GetNotes(notesModel.UserId,notesModel.NoteType);
+            var result = notes.GetNotes(notesModel.UserId,notesModel.NoteType,notesModel.token);
             Assert.NotNull(result);
         }
 
@@ -68,10 +69,11 @@ namespace XUnitTestCases.NotesTestCases
             var notes = new NotesAccountManagerService(notesData.Object);
             var notesModel = new NotesModel()
             {
-                Id = 1
+                Id = 1,
+                token = "abjhcbscbkcl.ckchndoi.hdkh"
             };
 
-            var result = notes.DeleteNotes(notesModel.Id);
+            var result = notes.DeleteNotes(notesModel.Id, notesModel.token);
             Assert.NotNull(result);
         }
 
@@ -85,11 +87,12 @@ namespace XUnitTestCases.NotesTestCases
             var notes = new NotesAccountManagerService(notesData.Object);
             var notesModel = new NotesModel()
             {
-                Id = 5
+                Id = 5,
+                token = "abjhcbscbkcl.ckchndoi.hdkh"
             };
 
             object excepted = 1;
-            object actual = await notes.DeleteNotes(notesModel.Id);
+            object actual = await notes.DeleteNotes(notesModel.Id, notesModel.token);
             Assert.NotEqual(excepted, actual);
         }
 
